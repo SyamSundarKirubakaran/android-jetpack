@@ -50,7 +50,17 @@ Android Jetpack is the next generation of components and tools along with Archit
   
 ## Architecture Components
 
-## Room
+* Room
 
-    * Declaratively bind observable data to UI elements
+    - Fluent SQLite database access using Object Mapping Technique.
+    - Need:
+        - Less Boiler Plate code .i.e., Sends data to the SQLite database as Objects and not as Content Values and returns the result of executing a query as Objects as Cursors. 
+        - Compile time validation of SQLite Queries.
+        - Support for Observations like Live Data and RxJava
+    - Makes use of Annotations for it's functioning and makes the API simple and neat to use.
+    - Annotations:
+        - @Entity: Defines the schema of the database table.
+        - @dao: Stands for Database Access Object, used to perform read or write operations on the database
+        - @database: As a database Holder. Creates a new Database based on supplied conditions, if it already exists it establishes a connection to the pre-existing database.
+        
 
