@@ -6,23 +6,26 @@
 
 > What's Android Jetpack
 
-Android Jetpack is the next generation of components and tools along with Architectural guidance designed to accelerate Android Development.
+Android Jetpack is the next generation of components and tools along with Architectural guidance designed to accelerate Android Development. The main reasons are:
+* Build high quality, robust apps
+* Eliminate boilerplate code
+* Accelerate development
 
-#### Show Some :heart:
+#### Show Some :heart: by
 
 [![GitHub stars](https://img.shields.io/github/stars/SyamSundarKirubakaran/Android-Jetpack.svg?style=social&label=Star)](https://github.com/SyamSundarKirubakaran/Android-Jetpack) [![GitHub followers](https://img.shields.io/github/followers/SyamSundarKirubakaran.svg?style=social&label=Follow)](https://github.com/SyamSundarKirubakaran) [![Twitter Follow](https://img.shields.io/twitter/follow/bugscripter.svg?style=social)](https://twitter.com/bugscripter)
 
 ## Categories
 
 * [Architecture components](#architecture-components)
-  - Data Binding
-  - Lifecycles
-  - LiveData
-  - Navigation
-  - Paging
-  - Room
-  - ViewModel
-  - WorkManager
+  - [Room](#room)
+  - [Data Binding](#data-binding)
+  - [Lifecycles](#Lifecycles)
+  - [LiveData](#LiveData)
+  - [Navigation](#Navigation)
+  - [Paging](#Paging)
+  - [ViewModel](#ViewModel)
+  - [WorkManager](#WorkManager)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -47,7 +50,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   
 ## Architecture Components
 
-* Data Binding
-    - Declaratively bind observable data to UI elements
+## Room
 
+    * Declaratively bind observable data to UI elements
 
