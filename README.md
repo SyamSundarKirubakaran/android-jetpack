@@ -8,14 +8,13 @@
 
 Android Jetpack is the next generation of components and tools along with Architectural guidance designed to accelerate Android Development.
 
-## Contents
+#### Show Some :heart:
 
-* Foundation components
-  - AppCompat
-  - Android KTX
-  - Multidex
-  - Test
-* Architecture components
+[![GitHub stars](https://img.shields.io/github/stars/SyamSundarKirubakaran/Android-Jetpack.svg?style=social&label=Star)](https://github.com/SyamSundarKirubakaran/Android-Jetpack) [![GitHub followers](https://img.shields.io/github/followers/SyamSundarKirubakaran.svg?style=social&label=Follow)](https://github.com/SyamSundarKirubakaran) [![Twitter Follow](https://img.shields.io/twitter/follow/bugscripter.svg?style=social)](https://twitter.com/bugscripter)
+
+## Categories
+
+* [Architecture components](#architecture-components)
   - Data Binding
   - Lifecycles
   - LiveData
@@ -24,6 +23,11 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Room
   - ViewModel
   - WorkManager
+* Foundation components
+  - AppCompat
+  - Android KTX
+  - Multidex
+  - Test
 * Behavior Components
   - Download manager
   - Media & playback
@@ -40,5 +44,10 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Palette
   - TV
   - Wear OS by Google
+  
+## Architecture Components
+
+* Data Binding
+    - Declaratively bind observable data to UI elements
 
 
