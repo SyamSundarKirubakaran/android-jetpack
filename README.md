@@ -8,15 +8,37 @@
 
 Android Jetpack is the next generation of components and tools along with Architectural guidance designed to accelerate Android Development.
 
-Author : [@bugscripter](https://twitter.com/bugscripter)
+## Contents
 
-## Architecture Components
+* Foundation components
+  - AppCompat
+  - Android KTX
+  - Multidex
+  - Test
+* Architecture components
+  - Data Binding
+  - Lifecycles
+  - LiveData
+  - Navigation
+  - Paging
+  - Room
+  - ViewModel
+  - WorkManager
+* Behavior Components
+  - Download manager
+  - Media & playback
+  - Notifications
+  - Permissions
+  - Sharing
+  - Slices
+* UI components
+  - Animation & transitions
+  - Auto
+  - Emoji
+  - Fragment
+  - Layout
+  - Palette
+  - TV
+  - Wear OS by Google
 
-- Data Binding
-- Lifecycles
-- LiveData
-- Navigation
-- Paging
-- Room
-- ViewModel
-- WorkManager
+
