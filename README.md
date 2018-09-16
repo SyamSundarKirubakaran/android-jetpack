@@ -227,7 +227,7 @@ Android Jetpack is the next generation of components and tools along with Archit
 * <b>Data Binding</b>
     - Declaratively bind observable data to UI elements.
     - It's a proven solution for boiler plate free UIs.
-    - <b>Code:</b>
+    - <b>Code:</b><br>
         ![DataBinding](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/databinding.png)
         
         - Here the code is self-explanator, Consider you're having a `data  class` in Kotlin that has a number of fields that has the real-time data that has to be updated in the UI then it can be directly parsed in the XML document of the UI by creating an appropriate variable for accessing the <b>data class</b> as shown above.
@@ -238,6 +238,7 @@ Android Jetpack is the next generation of components and tools along with Archit
                 binding.setLifecycleOwner(lifecycleOwner)
             ```
         - This can help keep the data in the UI upto date with the LiveData.
+
     
     
     
