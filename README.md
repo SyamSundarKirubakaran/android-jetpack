@@ -20,12 +20,12 @@ Android Jetpack is the next generation of components and tools along with Archit
 * [Architecture components](#architecture-components)
   - [Room](#room)
   - [ViewModel](#ViewModel)
-  - [Lifecycles](#Lifecycles)
-  - [Data Binding](#data-binding)
   - [LiveData](#LiveData)
+  - [Data Binding](#data-binding)
   - [WorkManager](#WorkManager)
   - [Paging](#Paging)
   - [Navigation](#Navigation)
+  - [Lifecycles](#Lifecycles)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -158,6 +158,32 @@ Android Jetpack is the next generation of components and tools along with Archit
                 - Presistence
                 - onSavedInstanceState
             - Linked to the `Activity lifecycle` and <b>not</b> with the `App lifecycle`.
+            
+* <b>Live Data:</b>
+    - Notify views when underlying database changes
+    - <b>Need:</b>
+        - Reactive UI.
+        - Updates only on reaching `onStart()` and `onResume()`.
+        - Cleans up itself automatically.
+        - Allows communication with Database to the UI without knowing about it.
+    - <b>Representation:</b>
+        ![LiveData](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/livedata.png)
+    - <b>Code:</b>
+        - LiveData can be made possible for `String` using `MutableLiveData<String>`
+        - To update the UI with real-time data from Live-Data we can make use of a pattern similar to the Observer Pattern.
+            ```java
+                mModel.getCurrentName().observe(this, new Observer<String>() {
+                    @Override
+                    public void onChanged(@Nullable final String newName) {
+                        // Update the UI, in this case, a TextView.
+                        mTextView.setText(newName);
+                    }
+                });
+            ```
+        - Here, `mModel` is the ViewModel instance and assume `getCurrentName()` returns a `MutableLiveData<String>` and the observer is set over it which invocates `onChanged()` when the data in the MutableLiveData changes.
+        - <b>Arguments:</b>
+            - `this` : Specifies the activity that it has the work on .i.e., <b>LifeCycleOwner</b>
+            - `Oberver<type>` : <b>type</b> depends on the return type of the Live Data.
     
     
     
