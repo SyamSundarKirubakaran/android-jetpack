@@ -21,11 +21,11 @@ Android Jetpack is the next generation of components and tools along with Archit
   - [Room](#room)
   - [ViewModel](#ViewModel)
   - [LiveData](#LiveData)
+  - [Lifecycles](#Lifecycles)
   - [Data Binding](#data-binding)
   - [WorkManager](#WorkManager)
   - [Paging](#Paging)
   - [Navigation](#Navigation)
-  - [Lifecycles](#Lifecycles)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -183,7 +183,61 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Here, `mModel` is the ViewModel instance and assume `getCurrentName()` returns a `MutableLiveData<String>` and the observer is set over it which invocates `onChanged()` when the data in the MutableLiveData changes.
         - <b>Arguments:</b>
             - `this` : Specifies the activity that it has the work on .i.e., <b>LifeCycleOwner</b>
-            - `Oberver<type>` : <b>type</b> depends on the return type of the Live Data.
+            - `Observer<type>` : <b>type</b> depends on the return type of the Live Data.
+
+* <b>Life Cycle</b>
+    - <b>Terms:</b>
+        - <b>Lifecycle:</b> An Object that defines Android Lifecycle.
+        - <b>Lifecycle Owner:</b> It's an interface:
+            - Objects with Lifecycles
+            - eg. Activities and Fragments.
+        - <b>LifecycleObserver:</b> Observes LifecycleOwner.
+    - <b>Code:</b>
+        - Let's say we want a Listener that has to be Lifecycle aware:
+            ```java
+                public class MyObserver implements LifecycleObserver {
+                    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+                    public void connectListener() {
+                        ...
+                    }
+                    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+                    public void disconnectListener() {
+                        ...
+                    }
+                }
+                lifecycleOwner.getLifecycle().addObserver(new MyObserver());
+            ```
+        - Now perform action based on the current state of the Activity or Fragment.
+            ```java
+                public class MyObserver implements LifecycleObserver {
+                    public void enable(){
+                        enable = true;
+                        if(lifecycle.getState().isAtleast(STARTED)){
+                            // action after onStart is reached
+                        }
+                }
+            ```
+    - <b>Important Note:</b>
+        - Initially Lifecycle Library was kept optional but now it has become a fundamental part of Android development and the AppCompatActivity and Fragment class inherit from the Lifecycle Library out of the box.
+            ```kotlin
+                class AppCompatActivity : LifecycleOwner
+                class Fragment : LifecycleOwner
+            ```
+            
+* <b>Data Binding</b>
+    - Declaratively bind observable data to UI elements.
+    - It's a proven solution for boiler plate free UIs.
+    - <b>Code:</b>
+        ![DataBinding](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/databinding.png)
+        
+        - Here the code is self-explanator, Consider you're having a `data  class` in Kotlin that has a number of fields that has the real-time data that has to be updated in the UI then it can be directly parsed in the XML document of the UI by creating an appropriate variable for accessing the <b>data class</b> as shown above.
+    - <b>Important Note:</b>
+        - They have native support for LiveData and hence LiveData can be used similar to the above shown instance.
+        - But this is not enough to observe it since data binding doesn't have a lifecycle. This can be fixed by adding a LifecycleOwner while creating a binding instance.
+            ```kotlin
+                binding.setLifecycleOwner(lifecycleOwner)
+            ```
+        - This can help keep the data in the UI upto date with the LiveData.
     
     
     
