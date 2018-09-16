@@ -19,13 +19,13 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 * [Architecture components](#architecture-components)
   - [Room](#room)
-  - [Data Binding](#data-binding)
-  - [Lifecycles](#Lifecycles)
-  - [LiveData](#LiveData)
-  - [Navigation](#Navigation)
-  - [Paging](#Paging)
   - [ViewModel](#ViewModel)
+  - [Lifecycles](#Lifecycles)
+  - [Data Binding](#data-binding)
+  - [LiveData](#LiveData)
   - [WorkManager](#WorkManager)
+  - [Paging](#Paging)
+  - [Navigation](#Navigation)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -52,29 +52,29 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 * <b>Room</b>
     - Fluent SQLite database access using Object Mapping Technique.
-    - Need:
+    - <b>Need:</b>
         - Less Boiler Plate code .i.e., Sends data to the SQLite database as Objects and not as Content Values and returns the result of executing a query as Objects as Cursors. 
         - Compile time validation of SQLite Queries.
         - Support for Observations like Live Data and RxJava
     - Makes use of Annotations for it's functioning and makes the API simple and neat to use.
-    - Annotations:
+    - <b>Annotations:</b>
         - <b>@Entity:</b> Defines the schema of the database table.
         - <b>@dao:</b> Stands for Database Access Object, used to perform read or write operations on the database
         - <b>@database:</b> As a database Holder. Creates a new Database based on supplied conditions, if it already exists it establishes a connection to the pre-existing database.
-    - Code:
+    - <b>Code:</b>
         - <b>@Entity:</b>
           ```java
-          @Entity(tableName = "word_table")
-          public class Word {
-                @PrimaryKey
-                @NonNull
-                @ColumnInfo(name = "word")
-                private String mWord;
-                public Word(String word) {this.mWord = word;}
-                public String getWord(){return this.mWord;}
-           }
+                @Entity(tableName = "word_table")
+                public class Word {
+                    @PrimaryKey
+                    @NonNull
+                    @ColumnInfo(name = "word")
+                    private String mWord;
+                    public Word(String word) {this.mWord = word;}
+                    public String getWord(){return this.mWord;}
+                }
           ```
-          Most of the annotations are self-explanatory where the <b>@Entity</b> takes in and declares the tableName that's about to be created (if tableName is not mentioned the table takes up the name of the class, here in this case : Word) and the class also has a number of optional attributes like setting the column name(if node specified it takes up the name of the varibale), It's important to note that the all the declarations inside the entity class are considered as columns of the database.(Here "one" .i.e., mWord). You can make use of <b>@Ignore</b> annotation to ignore a declaration as a column in your database. 
+          Most of the annotations are self-explanatory where the <b>@Entity</b> takes in and declares the tableName of the table that's about to be created (if tableName is not mentioned the table takes up the name of the class, here in this case : Word) and the class also has a number of optional attributes like setting the column name(if node specified it takes up the name of the varibale), It's important to note that the all the declarations inside the entity class are considered as columns of the database.(Here "one" .i.e., mWord). You can make use of <b>@Ignore</b> annotation to ignore a declaration as a column in your database. 
         - Room should have access to the member varaibles of the Entity class .i.e., it should be able to set or reset or update the value stored in a member variable and hence note that though the member variable is declared as private there is a public constructor and a getter to access the member variable.
         - <b>@dao:</b>
             ```java
@@ -107,7 +107,60 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
             Here, `.fallbackToDistructiveMigration()` is an optional attribute that signifies if the database schema is changed wipe out all the data existing in the currently existing database.
             Creating multiple instances of the database is expensive and is not recommended and hence keeping it as a singleton(which can have only one instance of the class) can come in handy.
+        - <b>Additional Hints</b>
+            - Use `@PrimayKey(autoGenerate = true)` to auto generate the primary key, it's usually applied to Integer values and hence starts from 1 and keeps incrementing itself.
+            - To pass a value of a member variable into the query make use of `:` .i.e.,
+            `@Query("SELECT * from word_table ORDER BY word LIKE :current_word")`
+            - Create and Make use of a <b>Repository class</b> to handle the Data Operations. You can handle custom logics such as if you're fetching data from the network but there is no existing connection to the internet, then you'll have to fetch and display the cached data or from dao.
         
+* <b>View Model</b>
+    - Manage UI-related data in a lifecycle-conscious way.
+    - Since it survives configuration changes it has the potential to replace AsyncTask Loaders.
+    - <b>Need:</b>
+        - High decoupling of UI and Data.
+        - No gaint activities with too many responsibilities.
+        - UI Controller displays data.
+        - ViewModel holds the UI Data.
+    - <b>Reason:</b>
+    - Say for an instance you're having an Activity that has a number of UI elements and that will have it's state updated based on the user inputs and now when the device undergoes configuration change the data will be lost since the activity has been recreated due to the configuration change. Of course, you can make use of `onSavedInstanceState()` but having forgotten a single field shall lead to inconsistency in the app, here is where <b>ViewModel</b> comes in to play things smart.
+    - Here in ViewModel since the UI data is decoupled from the activity lifecycle it can out-live the impact made by configuration changes on the data. Therefore, after recreation of the activity the UI Data can be fetched from the ViewModel to update the UI respectively.
+    - <b>Representation:</b>
+        ![ViewModel](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/viewmodel.png)
+    - <b>Code:</b>
+        - Extend from `ViewModel` or `AndroidViewModel`
+            ```java
+                public class MyViewModel extends ViewModel {
+                    // Should contain all the UI Data (As LiveData if possible)
+                    // Getters and Setters
+                }
+            ```
+        - Linking `ViewModel` to the Activity
+            ```java
+                public class MyActivity extends AppCompatActivity {
+                    public void onCreate(Bundle savedInstanceState) {
+                        // Create a ViewModel the first time the system calls an activity's onCreate() method.
+                        // Re-created activities receive the same MyViewModel instance created by the first activity.
+                        // ViewModelProvider provides ViewModel for a given lifecycle scope.
+                        MyViewModel model = ViewModelProviders.of(this).get(MyViewModel.class);
+                        model.getUsers().observe(this, users -> {
+                            // update UI
+                        });
+                    }
+                }
+            ```
+        - <b>Important Note:</b>
+            - `View Model` can survive:
+                - Configuration Changes
+            - `View Model` doesn't survive:
+                - Pressing Back .i.e., Destroying the activity.
+                - Killing the Activity through Multi-tasking.
+            - `View Model` is not a replacement for:
+                - Presistence
+                - onSavedInstanceState
+            - Linked to the `Activity lifecycle` and <b>not</b> with the `App lifecycle`.
+    
+    
+    
           
         
         
