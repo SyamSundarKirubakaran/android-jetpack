@@ -23,9 +23,9 @@ Android Jetpack is the next generation of components and tools along with Archit
   - [LiveData](#LiveData)
   - [Lifecycles](#Lifecycles)
   - [Data Binding](#data-binding)
-  - [WorkManager](#WorkManager)
   - [Paging](#Paging)
   - [Navigation](#Navigation)
+  - [WorkManager](#WorkManager)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -124,7 +124,7 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Reason:</b>
     - Say for an instance you're having an Activity that has a number of UI elements and that will have it's state updated based on the user inputs and now when the device undergoes configuration change the data will be lost since the activity has been recreated due to the configuration change. Of course, you can make use of `onSavedInstanceState()` but having forgotten a single field shall lead to inconsistency in the app, here is where <b>ViewModel</b> comes in to play things smart.
     - Here in ViewModel since the UI data is decoupled from the activity lifecycle it can out-live the impact made by configuration changes on the data. Therefore, after recreation of the activity the UI Data can be fetched from the ViewModel to update the UI respectively.
-    - <b>Representation:</b><br><br>
+    - <b>Representation:</b><br>
         <p align="center">
             <img src="assets/viewmodel.png">
         </p>
@@ -168,7 +168,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Updates only on reaching `onStart()` and `onResume()`.
         - Cleans up itself automatically.
         - Allows communication with Database to the UI without knowing about it.
-    - <b>Representation:</b><br><br>
+    - <b>Representation:</b><br>
         <p align="center">
             <img src="assets/livedata.png">
         </p>
@@ -231,11 +231,18 @@ Android Jetpack is the next generation of components and tools along with Archit
 * <b>Data Binding</b>
     - Declaratively bind observable data to UI elements.
     - It's a proven solution for boiler plate free UIs.
-    - <b>Code:</b><br><br>
-        <p align="center">
-            <img src="assets/databinding.png">
-        </p>
-        
+    - <b>Code:</b><br>
+        ```kotlin
+            data class User(val name: String, ... )
+        ```
+        ```xml
+            <layout>
+            <data>
+                <variable name="user" type="User"/>
+            </data>
+            <TextView android:text="@{user.name}"/>
+            </layout>
+        ```
         - Here the code is self-explanator, Consider you're having a `data  class` in Kotlin that has a number of fields that has the real-time data that has to be updated in the UI then it can be directly parsed in the XML document of the UI by creating an appropriate variable for accessing the <b>data class</b> as shown above.
     - <b>Important Note:</b>
         - They have native support for LiveData and hence LiveData can be used similar to the above shown instance.
@@ -244,6 +251,23 @@ Android Jetpack is the next generation of components and tools along with Archit
                 binding.setLifecycleOwner(lifecycleOwner)
             ```
         - This can help keep the data in the UI upto date with the LiveData.
+    
+* <b>Paging</b>
+    - Gradually load information on demand from your data source.
+    - In other words, Lazy loading for Recycler View.
+    - If there is a very large list of data to be loaded it's very in-efficient in handling memory constraints also the source of data can be from different locations like some from database and others from cloud.<br>
+        <p align="center">
+            <img src="assets/paging_1.png">
+        </p>
+    - Paging library comes with a `PagedList` class which is a Java List implementation that works with a data source.
+    - Every time you access an item in the PagedList it pulls data from the data source Lazily .i.e., on scrolling brings in more data from the data source.
+    - <b>Code:</b>
+        - Works great if `Room` is used.
+        - Consider,
+        
+    - <b>Important Note:</b>
+        - Paging supports <b>RxJava.</b>
+    
 
     
     
