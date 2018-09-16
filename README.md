@@ -124,8 +124,10 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Reason:</b>
     - Say for an instance you're having an Activity that has a number of UI elements and that will have it's state updated based on the user inputs and now when the device undergoes configuration change the data will be lost since the activity has been recreated due to the configuration change. Of course, you can make use of `onSavedInstanceState()` but having forgotten a single field shall lead to inconsistency in the app, here is where <b>ViewModel</b> comes in to play things smart.
     - Here in ViewModel since the UI data is decoupled from the activity lifecycle it can out-live the impact made by configuration changes on the data. Therefore, after recreation of the activity the UI Data can be fetched from the ViewModel to update the UI respectively.
-    - <b>Representation:</b>
-        ![ViewModel](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/viewmodel.png)
+    - <b>Representation:</b><br><br>
+        <p align="center">
+            <img src="assets/viewmodel.png">
+        </p>
     - <b>Code:</b>
         - Extend from `ViewModel` or `AndroidViewModel`
             ```java
@@ -166,8 +168,10 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Updates only on reaching `onStart()` and `onResume()`.
         - Cleans up itself automatically.
         - Allows communication with Database to the UI without knowing about it.
-    - <b>Representation:</b>
-        ![LiveData](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/livedata.png)
+    - <b>Representation:</b><br><br>
+        <p align="center">
+            <img src="assets/livedata.png">
+        </p>
     - <b>Code:</b>
         - LiveData can be made possible for `String` using `MutableLiveData<String>`
         - To update the UI with real-time data from Live-Data we can make use of a pattern similar to the Observer Pattern.
@@ -227,8 +231,10 @@ Android Jetpack is the next generation of components and tools along with Archit
 * <b>Data Binding</b>
     - Declaratively bind observable data to UI elements.
     - It's a proven solution for boiler plate free UIs.
-    - <b>Code:</b><br>
-        ![DataBinding](https://github.com/SyamSundarKirubakaran/Android-Jetpack/blob/master/assets/databinding.png)
+    - <b>Code:</b><br><br>
+        <p align="center">
+            <img src="assets/databinding.png">
+        </p>
         
         - Here the code is self-explanator, Consider you're having a `data  class` in Kotlin that has a number of fields that has the real-time data that has to be updated in the UI then it can be directly parsed in the XML document of the UI by creating an appropriate variable for accessing the <b>data class</b> as shown above.
     - <b>Important Note:</b>
