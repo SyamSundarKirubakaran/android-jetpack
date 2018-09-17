@@ -420,7 +420,30 @@ Android Jetpack is the next generation of components and tools along with Archit
                             .then(workC1, workC2)
                             .enqueue()
             ```
-        - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now. :)
+        - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
+        
+### TODO
+    - Complete the remaining components : work on Progress.!
+        
+### License
+```
+   Copyright 2018 Syam Sundar K
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
+### Contributions
+Just make pull request. You are in!
         
                 
         
