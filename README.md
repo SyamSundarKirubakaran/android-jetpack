@@ -24,8 +24,8 @@ Android Jetpack is the next generation of components and tools along with Archit
   - [Lifecycles](#Lifecycles)
   - [Data Binding](#data-binding)
   - [Paging](#Paging)
-  - [WorkManager](#WorkManager)
   - [Navigation](#Navigation)
+  - [WorkManager](#WorkManager)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -300,20 +300,131 @@ Android Jetpack is the next generation of components and tools along with Archit
                         <img src="assets/page_2.png">
                       </p>
                 - The <b>best</b> way:
-                    - Representation<br>
+                    - Representation:<br>
                         <p align="center">
-                            <img src="assets/tech_1.png">
-                            <img src="assets/tech_2.png">
+                        <b>I</b><img src="assets/tech_1.png">
+                        <b>II</b><img src="assets/tech_2.png">
                         </p>
                     - The first technique is not so efficient because of the following reasons:
                         - Poor network.
                         - Not using local data form the Database though they are present.
                     - This is over come by the second technique which is self explanatory.
                 
-* <b>Work Manager</b>
-    
-    
+* <b>Navigation</b>
+    - Handle everything needed for in-app navigation.
+    - <b>Need:</b>
+        - Animations.
+        - Argument Passing with type safety.
+        - Up and Back button press behaviour.
+        - DeepLink handling.
+        - No more Fragment transactions.
+    - It's a visual component added in Android Studio which helps user define flow in their app from     one activity to an other or from one fragment to an other.
+    - Say for an instance if a user enters into your app using deep links and on pressing back/up       button the user should be taken to the previous screen in the app and should not exit the app.     This hierarchy can be easily defined using navigation.
+    - The preceeding activities/fragments are pushed into the `back stack` as the deep link is clicked   and going back shall lead to popping of contents from the back stack to reach the previous         screens.
+    - <b>Representation:</b><br>
+        <p align="center">
+            <img src="assets/navigation.png">
+        </p>
+    - The control flow is shown by using pointed arrows to the succeeding activities.
 
+* <b>Work Manager</b>
+    - Manage your Android background jobs.
+    - <b>Need</b>
+        - Solution for <b>Deferrable Garanteed Execution</b>.
+            - This means when any of the following tasks happen and if the user is not connected to     the network then the tasks should be reserved and once the network connection is           restored the appropriate task has to be done.
+            - Tasks
+                - Sending a tweet
+                - Uploading logs
+                - Periodic data sync
+    - This is a successor (kinda) of JobScheduler and Firebase Job Dispacher since the problem with     the latters is that, it's hard to implement and has different behaviours and different APIs.
+    - <b>Concepts:</b>
+        - <b>Workers</b> which executes the actions.
+        - <b>Work Managers</b> which trigger the workers.
+    - <b>Code:</b>
+        ```kotlin
+            // Extend from the worker class
+            class CompressWorker : Worker()  {
+                //implement the doWork()
+                override fun doWork(): Result {
+                    return Result.SUCCESS
+                }
+            }
+        ```
+        - Set Constraints:
+            ```kotlin
+                val myConstraints = Constraints.Builder()
+                                    .setRequiresDeviceIdle(true)
+                                    .setRequiresCharging(true)
+                                    .build()
+
+                val compressionWork = OneTimeWorkRequestBuilder<CompressWorker>()
+                                    .setConstraints(myConstraints)
+                                    .build()
+            ```
+        - Additionals:
+            - `.setBackoffCriteria` mention what to do if the task is failing.
+            - Pass in arguments like:
+                ```kotlin
+                    .setInputData(
+                        mapOf("sample" to "sample1").toWorkData()
+                    )
+                ```
+        - Invocation:
+            - Get an instance of the <b>WorkManager</b> and enqueue the work
+                ```kotlin
+                    WorkManager.getInstance().enqueue(work)
+                ```
+    - <b>Input and Output semantics</b>
+        - Not only takes Input but also provide Output data. This can be accomplished by observing the data through <b>WorkManager</b>
+    - <b>Architecture</b>
+        <p align="center">
+            <img src="assets/workmanager.png">
+        </p>
+    - <b>Special Case</b>
+        - Consider a senario in which we have an image that has to be processed and uploaded to the server. Here we have 2 tasks, where task 1 .i.e., Image Processing can be done without a network and task 2 .i.e., Uploading to server requires a network. This can be easily accomplished using Work Manager.
+            ```kotlin
+                // Create 2 classes for the 2 tasks
+                class ImageProcessing : Worker()
+                class Upload : Worker()
+                
+                fun createImageWorker(image : File) : OneTimeWorkRequest{
+                    ...
+                }
+                
+                val processImageWork = createImageWorker(file)
+                
+                //constraint to upload only in the presence of Network
+                val constraint = Constraints.Builder()
+                                 .setRequiredNetworkType(NetworkType.CONNECTED)
+                                 .build()
+                                
+                val uploadImageWork = OneTimeWorkRequestBuilder<UploadImageWorker>()
+                                      .setConstraints(constraints)
+                                      .build
+                                    
+                // Starts with image processing and then initiates upload
+                WorkManager.getInstance()
+                           .beginWith(processImageWork)
+                           .then(UploadImageWork)
+                           .enqueue()
+            ```
+    - <b>Important Note</b>
+        - Similar to the above scenario not just 2 but a number of work can be enqueued in the WorkManager by providing proper constraints.
+            ```kotlin
+                WorkManager.getInstance()
+                            // First, run all the A tasks (in parallel):
+                            .beginWith(workA1, workA2, workA3)
+                            // ...when all A tasks are finished, run the single B task:
+                            .then(workB)
+                            // ...then run the C tasks (in any order):
+                            .then(workC1, workC2)
+                            .enqueue()
+            ```
+        - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now. :)
+        
+                
+        
+        
     
     
     
