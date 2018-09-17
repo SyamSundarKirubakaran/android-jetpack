@@ -302,8 +302,8 @@ Android Jetpack is the next generation of components and tools along with Archit
                 - The <b>best</b> way:
                     - Representation:<br>
                         <p align="center">
-                        <b>I</b><img src="assets/tech_1.png">
-                        <b>II</b><img src="assets/tech_2.png">
+                        <b>I</b><br><img src="assets/tech_1.png"><br>
+                        <b>II</b><br><img src="assets/tech_2.png">
                         </p>
                     - The first technique is not so efficient because of the following reasons:
                         - Poor network.
