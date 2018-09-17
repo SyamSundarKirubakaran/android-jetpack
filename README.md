@@ -255,18 +255,33 @@ Android Jetpack is the next generation of components and tools along with Archit
 * <b>Paging</b>
     - Gradually load information on demand from your data source.
     - In other words, Lazy loading for Recycler View.
-    - If there is a very large list of data to be loaded it's very in-efficient in handling memory constraints also the source of data can be from different locations like some from database and others from cloud.<br>
-        <p align="center">
-            <img src="assets/paging_1.png">
-        </p>
-    - Paging library comes with a `PagedList` class which is a Java List implementation that works with a data source.
-    - Every time you access an item in the PagedList it pulls data from the data source Lazily .i.e., on scrolling brings in more data from the data source.
+    - <b>Need</b>
+        - Convenience
+        - Multiple Layer
+        - Performance
+        - Lifecycle aware
+        - Flexible with different background API and Data Structures.
+    - If there is a very large list of data to be loaded it's very in-efficient in handling memory       constraints also the source of data can be from different locations like some from <b>cloud</b>    and others from <b>database</b> if the network in not available and so on.<br>  
+    - Paging library comes with a `PagedList` class which is a Java List implementation that works       with a data source Asynchronously.
+    - Every time you access an item in the PagedList it pulls data from the data source Lazily .i.e.,   on scrolling brings in more data from the data source.
+    - One of the most common problems is that, if the data is fetched from data source that has         thousands of rows returned as a result of query these thousand words are kept ready to inflate      it in the UI even though the user can see only 8 - 10 rows of the query result. This is in-         efficient(Note that the recycler view can only help in handling the resorces by recycling the     list item resources and it has nothing to do with the data). Here is where the Paging stands      up by providing data on-demand (when the user scrolls) to the recycler view.
     - <b>Code:</b>
         - Works great if `Room` is used.
-        - Consider,
-        
+        - Paging is a bit compicated to explain with simple code samples since it involves a recycler   view. But we would highly recommend you going through the [Codelab]                           (https://github.com/googlesamples/android-architecture-                                       components/tree/master/PagingWithNetworkSample) for paging and checkout the paging [sample     app](https://github.com/googlesamples/android-architecture-                                   components/tree/master/PagingWithNetworkSample) so that you get a much more clear picture of   it. 
+        - It is highly similar to creating a recycler view and involves some changes in the Adapter     and LiveData.
     - <b>Important Note:</b>
         - Paging supports <b>RxJava.</b>
+        - <b>ListAdapter</b>
+            ListAdapter is a RecyclerView Adapter thet displays a list. 
+            ```kotlin
+                // Call 1
+                listAdapter.submitList(listOf(1,2,3,4))
+                // Call 2
+                listAdapter.submitList(listOf(1,3,4))
+                // when second statement is executed after executing 1st it simply removes '2' because it finds the difference between the two updates in the background thread and perform UI update correspondingly. This makes it efficient.
+            ```
+        
+            
     
 
     
