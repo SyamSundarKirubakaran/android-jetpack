@@ -24,8 +24,8 @@ Android Jetpack is the next generation of components and tools along with Archit
   - [Lifecycles](#Lifecycles)
   - [Data Binding](#data-binding)
   - [Paging](#Paging)
-  - [Navigation](#Navigation)
   - [WorkManager](#WorkManager)
+  - [Navigation](#Navigation)
 * Foundation components
   - AppCompat
   - Android KTX
@@ -267,8 +267,8 @@ Android Jetpack is the next generation of components and tools along with Archit
     - One of the most common problems is that, if the data is fetched from data source that has         thousands of rows returned as a result of query these thousand words are kept ready to inflate      it in the UI even though the user can see only 8 - 10 rows of the query result. This is in-         efficient(Note that the recycler view can only help in handling the resorces by recycling the     list item resources and it has nothing to do with the data). Here is where the Paging stands      up by providing data on-demand (when the user scrolls) to the recycler view.
     - <b>Code:</b>
         - Works great if `Room` is used.
-        - Paging is a bit compicated to explain with simple code samples since it involves a recycler   view. But we would highly recommend you going through the <a href="https://github.com/googlesamples/android-architecture-components/tree/master/PagingWithNetworkSample">Codelab</a> for paging and checkout the paging     <a href="https://github.com/googlesamples/android-architecture-                                   components/tree/master/PagingWithNetworkSample">Sample app</a> so that you get a much     more clear picture of it. 
-        - It is highly similar to creating a recycler view and involves some changes in the Adapter     and LiveData.
+        - Paging is a bit compicated to explain with simple code samples since it involves a recycler   view. But we would highly recommend you going through the <a href="https://codelabs.developers.google.com/codelabs/android-paging/index.html#0">Codelab</a>   for paging and checkout the paging <a href="https://github.com/googlesamples/android-architecture-components/tree/master/PagingWithNetworkSample">Sample app</a> so that you get a   much more clear picture of it. 
+        - It is highly similar to creating a recycler view and involves some changes in the Adapter     (as PageListAdapter) and LiveData.
     - <b>Important Note:</b>
         - Paging supports <b>RxJava.</b>
         - <b>ListAdapter</b>
@@ -280,8 +280,38 @@ Android Jetpack is the next generation of components and tools along with Archit
                 listAdapter.submitList(listOf(1,3,4))
                 // when second statement is executed after executing 1st it simply removes '2' because it finds the difference between the two updates in the background thread and perform UI update correspondingly. This makes it efficient.
             ```
-        
-            
+        - Allows <b>Place Holders</b>
+            - <b>Without</b> using Place holders:
+                Considers the list size as the size of the list until it's paged and once we've reached the bottom of the paged items the scroll bar jumps to the middle of the scroll interface and we can scroll through the next set of list items that are paged after reaching the end of the firstly paged list. This is not so good in principle and even worse when it comes to handling animation of the scroll bar.
+            - <b>With</b> Place Holders:
+                The size of the entire list is taken until the item data becomes null then the contents that are paged are displayed in the list and remaning are shown in the form of place holders which are enabled by default, once they are paged the data will fill up those place holders.<br>
+                <p align="center">
+                    <img src="assets/placeholder.png">
+                </p>
+            - Depends on the Data Source like
+                - Positional Data Source (best option)
+                    - Jump to the middle of the list using scroll then start paging from the initial     position visible .i.e., visible placeholder.
+                - ItemKeyed Data Source
+                    - Given a page, the previous page can be identified using first item in the list     and the following item can be identified using the last item in the list. If the   data source is updated in the mean-while fetch the page sized list from the       beginning element of the visible list and perform diff and inflate the changes.
+                - PageKeyed Data Source
+                    - Used in server-side APIs.
+                    - Representation:<br>
+                      <p align="center">
+                        <img src="assets/page_2.png">
+                      </p>
+                - The <b>best</b> way:
+                    - Representation<br>
+                        <p align="center">
+                            <img src="assets/tech_1.png">
+                            <img src="assets/tech_2.png">
+                        </p>
+                    - The first technique is not so efficient because of the following reasons:
+                        - Poor network.
+                        - Not using local data form the Database though they are present.
+                    - This is over come by the second technique which is self explanatory.
+                
+* <b>Work Manager</b>
+    
     
 
     
