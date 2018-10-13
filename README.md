@@ -431,6 +431,12 @@ Android Jetpack is the next generation of components and tools along with Archit
     - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
     - The various permissions that an app can ask for are [found here]()
+     <p align="center">
+            <img src="assets/runtime_permission_request_2x.png">
+    </p>
+     <p align="center">
+            <img src="assets/install_time_permissions_dialog_2x.png">
+    </p>
 
     - <b>Code:</b>
         - <b>In the App Manifest:</b>
@@ -476,7 +482,8 @@ Android Jetpack is the next generation of components and tools along with Archit
             }
         ```
         - <b>Handling the user's response:</b>
-        After the user grants or denies the permission, the system invoke onRequestPermissionsResult method. Your App must override the method and handle the functionality if the permission is granted, or disable that particular functionality if denied.
+        After the user grants or denies the permission, the system invoke onRequestPermissionsResult method. Your App must override the method and handle the functionality if the permission is granted, or disable that particular functionality if denied. If the user denies the permission for multiple times the system them also shows the dialog with the `Never Ask Again` checkbox. Hence always check if the permission is available at runtime.
+        
         ```java
             @Override
             public void onRequestPermissionsResult(int requestCode,
