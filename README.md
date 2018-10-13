@@ -430,12 +430,13 @@ Android Jetpack is the next generation of components and tools along with Archit
     - In Android 5.1.1 (Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
     - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
-    - The various permissions that an app can ask for are [found here](https://developer.android.com/reference/android/Manifest.permission)<br/>
-    <b>Runtime Permissions<br/></b>
+    - The various permissions that an app can ask for are [found here](https://developer.android.com/reference/android/Manifest.permission)
+    
+    <b><br/>Runtime Permissions<br/></b>
     <p align="center">
             <img src="assets/runtime_permission_request_2x.jpg">
     </p>
-    <b>Install Time permissions<br/></b>
+    <b><br/>Install Time permissions<br/></b>
     <p align="center">
             <img src="assets/install_time_permissions_dialog_2x.jpg">
     </p>
