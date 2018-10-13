@@ -35,7 +35,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Download manager
   - Media & playback
   - Notifications
-  - Permissions
+  - [Permissions](#permissions)
   - Sharing
   - Slices
 * UI components
@@ -432,10 +432,11 @@ Android Jetpack is the next generation of components and tools along with Archit
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
     - The various permissions that an app can ask for are [found here]()
      <p align="center">
-            <img src="assets/runtime_permission_request_2x.png">
+            
+            <img src="assets/runtime_permission_request_2x.jpg">
     </p>
      <p align="center">
-            <img src="assets/install_time_permissions_dialog_2x.png">
+            <img src="assets/install_time_permissions_dialog_2x.jpg">
     </p>
 
     - <b>Code:</b>
