@@ -430,11 +430,11 @@ Android Jetpack is the next generation of components and tools along with Archit
     - In Android 5.1.1 (Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
     - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
-
+    - The various permissions that an app can ask for are [found here]()
 
     - <b>Code:</b>
         - <b>In the App Manifest:</b>
-        Add the required permission as a child to the Manifest element
+        Add the required `uses-permission` tag as a child to the Manifest element
           ```xml
               <manifest xmlns:android="http://schemas.android.com/apk/res/android"
                 package="com.example.snazzyapp">
@@ -475,7 +475,7 @@ Android Jetpack is the next generation of components and tools along with Archit
                 // Permission has already been granted
             }
         ```
-        <b>Handling the user's response:</b>
+        - <b>Handling the user's response:</b>
         After the user grants or denies the permission, the system invoke onRequestPermissionsResult method. Your App must override the method and handle the functionality if the permission is granted, or disable that particular functionality if denied.
         ```java
             @Override
