@@ -423,6 +423,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
         
 ### TODO
+
     - Complete the remaining components : work on Progress.!
         
 ### License
