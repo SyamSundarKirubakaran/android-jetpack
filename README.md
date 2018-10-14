@@ -439,13 +439,23 @@ Android Jetpack is the next generation of components and tools along with Archit
          - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.
          <p align="center">
             <img src="assets/margin&padding.png">
-          </p>
-          - <br><b>Margin and Padding</b><br>
+          </p><br>
+          - <b>Margin and Padding</b><br>
                 - Margins are the spaces outside the border, between the border and the other elements next to this view.
                 - Padding is the space inside the border, between the border and the actual view’s content.<br>
          -<b>Gravity & Layout_Gravity</b><br>
             - Gravity specifies how child Views are positioned.
             - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.
+          * <b>Types</b><br>
+              - <b>Linear Layout</b>
+              - <b>Relative Layout</b>
+              - <b>Frameout Layout</b>
+              - <ScrollView</b>
+              
+       # Linear Layout 
+       - A layout that arranges other views either horizontally in a single column or vertically in a single row.
+       
+          
 ### TODO
     - Complete the remaining components : work on Progress.!
         
