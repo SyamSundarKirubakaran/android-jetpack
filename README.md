@@ -463,6 +463,27 @@ Android Jetpack is the next generation of components and tools along with Archit
            "child views" or "children" of the linear layout -->
             </LinearLayout>
               ```
+        - Set android:orientation to specify whether child views are displayed in a row or column.
+           <p align="center">
+            <img src="assets/verorhori.png">
+          </p><br>
+         ### Relative Layout
+       - In a relative layout every element arranges itself relative to other elements or a parent element.
+        <p align="center">
+            <img src="assets/relative.png">
+          </p><br>
+          
+       ### Frame Layout
+       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.
+       
+       - ou can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
+       
+       - Child views are drawn in a stack, with the most recently added child on top.
+       <p align="center">
+            <img src="assets/frame.png">
+          </p><br>
+       
+        
                 
    
           
