@@ -433,9 +433,9 @@ Android Jetpack is the next generation of components and tools along with Archit
   
   * <b>Layout Attributes</b> <br>
         - <b>ID</b><br>
-              - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.
-         - <br><b>Height & Width</b><br>
-                -It describes about the Height and Width of the view.
+                  - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
+         - <b>Height & Width</b><br>
+                -It describes about the Height and Width of the view.<br><br>
          - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.
          <p align="center">
             <img src="assets/margin&padding.png">
