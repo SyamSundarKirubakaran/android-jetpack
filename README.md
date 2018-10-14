@@ -464,7 +464,8 @@ Android Jetpack is the next generation of components and tools along with Archit
             </LinearLayout>
               ```
         - Set android:orientation to specify whether child views are displayed in a row or column.
-           <p align="center">
+           
+          <p align="center">
             <img src="assets/verorhori.png">
           </p><br>
         
