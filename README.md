@@ -430,9 +430,17 @@ Android Jetpack is the next generation of components and tools along with Archit
     - In Android 5.1.1 (Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
     - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
-    - The various permissions that an app can ask for, are [found here](https://developer.android.com/reference/android/Manifest.permission)
+    - The various permissions that an app can ask for are [found here](https://developer.android.com/reference/android/Manifest.permission)
     
- 
+    <b><br/>Runtime Permissions<br/></b>
+    <p align="center">
+            <img src="assets/runtime_permission_request_2x.jpg">
+    </p>
+    <b><br/>Install Time permissions<br/></b>
+    <p align="center">
+            <img src="assets/install_time_permissions_dialog_2x.jpg">
+    </p>
+
     - <b>Code:</b>
         - <b>In the App Manifest:</b>
         Add the required `uses-permission` tag as a child to the Manifest element
@@ -503,7 +511,7 @@ Android Jetpack is the next generation of components and tools along with Archit
             }
         ```
         - <b>Permissions of Optional Hardware:</b>
-        For using certain harware features such as camera or GPS your app needs permission. However not all devices posses all the required hardwares. So, in the Android Manifest request for the permission as shown below,
+        For using certain harware features such as camera or GPS your app needs permission. However not all devices posses all the required hardwares. So, in the Android Manifest file request for the permission as shown below,
         ```xml
             <uses-feature android:name="android.hardware.camera" android:required="false" />
         ```
