@@ -421,6 +421,33 @@ Android Jetpack is the next generation of components and tools along with Archit
                             .enqueue()
             ```
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
+
+##UI Components
+
+* <b>Layout</b>
+    - A layout defines the structure for a user interface in your app, such as in an activity. All elements in the layout are built using a hierarchy of View and ViewGroup objects. 
+    - <b>View</b>
+        - The UI consists of a hierarchy of objects called views — every element of the screen is a view. The View class represents the basic building block for all UI components, and the base class for classes that provide interactive UI components such as buttons, checkboxes, and text entry fields.
+    - <b>ViewGroup</b>
+        - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
+  
+  * <b>Layout Attributes</b>
+        - <b>ID</b>
+            <b>Syntax :</b> android:id=”@+id/my_id” 
+              - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.
+         - <b>Height & Width</b>
+              <b>Syntax :</b> android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                -It describes about the Height and Width of the view.
+         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding
+         <p align="center">
+            <img src="assets/viewmodel.png">
+          </p>
+          - <b>Margin and Padding</b>
+              <b>Syntax :</b> android:padding="10dp" 
+                              android:layout_margin="10dp"
+              
+                   
         
 ### TODO
     - Complete the remaining components : work on Progress.!
