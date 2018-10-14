@@ -451,6 +451,7 @@ Android Jetpack is the next generation of components and tools along with Archit
               - <b>Linear Layout</b><br>
               - <b>Relative Layout</b><br>
               - <b>Frameout Layout</b><br>
+              - <b>Constraint Layout</b><br>
               
        ### Linear Layout 
        - A layout that arranges other views either horizontally in a single column or vertically in a single row.
@@ -485,8 +486,25 @@ Android Jetpack is the next generation of components and tools along with Archit
             <img src="assets/frame.jpeg">
           </p><br>
        
-        
-                
+    ### Constraint Layout
+    
+    -A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
+    <b>Note</b> -  ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
+    
+    - There are currently various types of constraints that you can use:
+
+        - Relative positioning
+        - Margins
+        - Centering positioning
+        - Circular positioning
+        - Visibility behavior
+        - Dimension constraints
+        - Chains
+        - Virtual Helpers objects
+        - Optimizer
+      <p align="center">
+            <img src="assets/constraint.gif">
+          </p><br>
    
           
 ### TODO
