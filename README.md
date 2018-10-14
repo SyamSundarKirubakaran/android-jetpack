@@ -436,7 +436,7 @@ Android Jetpack is the next generation of components and tools along with Archit
                   - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
          - <b>Height & Width</b><br>
                 -It describes about the Height and Width of the view.<br><br>
-         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.
+         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.<br>
          <p align="center">
             <img src="assets/margin&padding.png">
           </p><br>
@@ -450,7 +450,6 @@ Android Jetpack is the next generation of components and tools along with Archit
               - <b>Linear Layout</b>
               - <b>Relative Layout</b>
               - <b>Frameout Layout</b>
-              - <ScrollView</b>
               
        ### Linear Layout 
        - A layout that arranges other views either horizontally in a single column or vertically in a single row.
@@ -463,9 +462,9 @@ Android Jetpack is the next generation of components and tools along with Archit
            "child views" or "children" of the linear layout -->
             </LinearLayout>
               ```
-        - Set android:orientation to specify whether child views are displayed in a row or column.
+       - Set android:orientation to specify whether child views are displayed in a row or column.
            
-          <p align="center">
+         <p align="center">
             <img src="assets/verorhori.png">
           </p><br>
         
