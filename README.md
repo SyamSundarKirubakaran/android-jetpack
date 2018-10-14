@@ -441,7 +441,7 @@ Android Jetpack is the next generation of components and tools along with Archit
                 -It describes about the Height and Width of the view.
          - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding
          <p align="center">
-            <img src="margin&padding.png">
+            <img src="assets/margin&padding.png">
           </p>
           - <b>Margin and Padding</b>
               <b>Syntax :</b> android:padding="10dp" 
