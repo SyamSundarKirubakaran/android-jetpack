@@ -462,7 +462,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         <!-- Include other widget or layout tags here. These are considered
            "child views" or "children" of the linear layout -->
          </LinearLayout>
-       
+       '''
           
 ### TODO
     - Complete the remaining components : work on Progress.!
