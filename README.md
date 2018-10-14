@@ -445,8 +445,9 @@ Android Jetpack is the next generation of components and tools along with Archit
                 - Padding is the space inside the border, between the border and the actual view’s content.<br>
          -<b>Gravity & Layout_Gravity</b><br>
             - Gravity specifies how child Views are positioned.
-            - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.
-          * <b>Types</b><br>
+            - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
+          
+       * <b>Types</b><br>
               - <b>Linear Layout</b>
               - <b>Relative Layout</b>
               - <b>Frameout Layout</b>
