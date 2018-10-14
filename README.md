@@ -426,7 +426,19 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 * <b>Permissions</b>
     - Android apps require permissions from the user to access sensitive Data
-    - [Normal permissions](https://developer.android.com/guide/topics/permissions/overview#normal_permissions) are provided by the Android system itself. However [Dangerous permissions](https://developer.android.com/guide/topics/permissions/overview#permission-groups) that can affects user's privacy require explicit permissions from the user.
+    - Normal permissions such as
+        - ACCESS_NETWORK_STATE
+        - ACCESS_WIFI_STATE
+        - SET_WALLPAPER
+        - VIBRATE
+        - WAKE_LOCK etc
+        are provided by the Android system itself. 
+    - However Dangerous permissions like,
+        - READ_CALL_LOG
+        - CAMERA
+        - READ_CONTACTS
+        - RECORD_AUDIO
+        - ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION etc that can affects user's privacy require explicit permissions from the user.
     - In Android 5.1.1 (Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
     - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
     - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
