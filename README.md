@@ -448,9 +448,9 @@ Android Jetpack is the next generation of components and tools along with Archit
             - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
           
        * <b>Types</b><br>
-              - <b>Linear Layout</b>
-              - <b>Relative Layout</b>
-              - <b>Frameout Layout</b>
+              - <b>Linear Layout</b><br>
+              - <b>Relative Layout</b><br>
+              - <b>Frameout Layout</b><br>
               
        ### Linear Layout 
        - A layout that arranges other views either horizontally in a single column or vertically in a single row.
@@ -466,7 +466,7 @@ Android Jetpack is the next generation of components and tools along with Archit
        - Set android:orientation to specify whether child views are displayed in a row or column.
            
          <p align="center">
-            <img src="assets/verorhori.png">
+            <img src="assets/ver.png">
           </p><br>
         
        ### Relative Layout
