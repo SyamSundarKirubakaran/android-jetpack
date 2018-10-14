@@ -470,7 +470,7 @@ Android Jetpack is the next generation of components and tools along with Archit
          ### Relative Layout
        - In a relative layout every element arranges itself relative to other elements or a parent element.
         <p align="center">
-            <img src="assets/relative.png">
+            <img src="assets/relative.jpg">
           </p><br>
           
        ### Frame Layout
@@ -480,7 +480,7 @@ Android Jetpack is the next generation of components and tools along with Archit
        
        - Child views are drawn in a stack, with the most recently added child on top.
        <p align="center">
-            <img src="assets/frame.png">
+            <img src="assets/frame.jpeg">
           </p><br>
        
         
