@@ -35,7 +35,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Download manager
   - Media & playback
   - Notifications
-  - Permissions
+  - [Permissions](#Permissions)
   - Sharing
   - Slices
 * UI components
@@ -421,7 +421,116 @@ Android Jetpack is the next generation of components and tools along with Archit
                             .enqueue()
             ```
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
+
+## Behavior Components
+
+* <b>Permissions</b>
+    - Android apps require permissions from the user to access sensitive Data
+    - Normal permissions such as
+        - ACCESS_NETWORK_STATE
+        - ACCESS_WIFI_STATE
+        - SET_WALLPAPER
+        - VIBRATE
+        - WAKE_LOCK etc
+        are provided by the Android system itself. 
+    - However Dangerous permissions like,
+        - READ_CALL_LOG
+        - CAMERA
+        - READ_CONTACTS
+        - RECORD_AUDIO
+        - ACCESS_FINE_LOCATION & ACCESS_COARSE_LOCATION etc that can affects user's privacy require explicit permissions from the user.
+    - In Android 5.1.1 (Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
+    - In Android 6.0 (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
+    - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
+    - The various permissions that an app can ask for are [found here](https://developer.android.com/reference/android/Manifest.permission)
+    
+    <b><br/>Runtime Permissions<br/></b>
+    <p align="center">
+            <img src="assets/runtime_permission_request_2x.jpg">
+    </p>
+    <b><br/>Install Time permissions<br/></b>
+    <p align="center">
+            <img src="assets/install_time_permissions_dialog_2x.jpg">
+    </p>
+
+    - <b>Code:</b>
+        - <b>In the App Manifest:</b>
+        Add the required `uses-permission` tag as a child to the Manifest element
+          ```xml
+              <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+                package="com.example.snazzyapp">
+
+                <uses-permission android:name="android.permission.SEND_SMS"/>
+                <!-- other permissions go here -->
+
+                <application ...>
+                    ...
+                </application>
+              </manifest>
+          ```
+        - <b>In the Activity requiring the permission:</b>
+        ```java
+            // Here, thisActivity is the current activity
+            if (ContextCompat.checkSelfPermission(thisActivity,
+                    Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is not granted
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,
+                        Manifest.permission.READ_CONTACTS)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                } else {
+                    // No explanation needed; request the permission
+                    ActivityCompat.requestPermissions(thisActivity,
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            } else {
+                // Permission has already been granted
+            }
+        ```
+        - <b>Handling the user's response:</b>
+        After the user grants or denies the permission, the system invoke onRequestPermissionsResult method. Your App must override the method and handle the functionality if the permission is granted, or disable that particular functionality if denied. If the user denies the permission for multiple times the system them also shows the dialog with the `Never Ask Again` checkbox. Hence always check if the permission is available at runtime.
         
+        ```java
+            @Override
+            public void onRequestPermissionsResult(int requestCode,
+                    String permissions[], int[] grantResults) {
+                switch (requestCode) {
+                    case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                        // If request is cancelled, the result arrays are empty.
+                        if (grantResults.length > 0
+                            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            // permission was granted, yay! Do the
+                            // contacts-related task you need to do.
+                        } else {
+                            // permission denied, boo! Disable the
+                            // functionality that depends on this permission.
+                        }
+                        return;
+                    }
+
+                    // other 'case' lines to check for other
+                    // permissions this app might request.
+                }
+            }
+        ```
+        - <b>Permissions of Optional Hardware:</b>
+        For using certain harware features such as camera or GPS your app needs permission. However not all devices posses all the required hardwares. So, in the Android Manifest file request for the permission as shown below,
+        ```xml
+            <uses-feature android:name="android.hardware.camera" android:required="false" />
+        ```
+        Unless the android:required attribute is specified to false, your app will be listed "only" to devices that have the hardware.
+        - <b>More info:</b>
+        For more info and details on permission enforcements visit the [official documentation](https://developer.android.com/guide/topics/permissions/overview)
+
 ### TODO
 
     - Complete the remaining components : work on Progress.!
