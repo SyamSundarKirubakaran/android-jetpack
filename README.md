@@ -452,8 +452,8 @@ Android Jetpack is the next generation of components and tools along with Archit
               - <b>Frameout Layout</b>
               - <ScrollView</b>
               
-       # Linear Layout 
-       - A layout that arranges other views either horizontally in a single column or vertically in a single row.
+       ### Linear Layout 
+         - A layout that arranges other views either horizontally in a single column or vertically in a single row.
        
           
 ### TODO
