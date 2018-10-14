@@ -431,7 +431,7 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>ViewGroup</b>
         - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
   
-  * <b>Layout Attributes</b>
+  * <b>Layout Attributes</b> <br>
         - <b>ID</b>
             - <b>Syntax :</b> android:id=”@+id/my_id” 
               - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.
