@@ -454,15 +454,17 @@ Android Jetpack is the next generation of components and tools along with Archit
               
        ### Linear Layout 
        - A layout that arranges other views either horizontally in a single column or vertically in a single row.
-          '''xml
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <!-- Include other widget or layout tags here. These are considered
+              ```xml
+               <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+          android:orientation="horizontal">
+          <!-- Include other widget or layout tags here. These are considered
            "child views" or "children" of the linear layout -->
-         </LinearLayout>
-            '''
+            </LinearLayout>
+              ```
+                
+   
           
 ### TODO
     - Complete the remaining components : work on Progress.!
