@@ -47,7 +47,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Layout
   - Palette
   - TV
-  - Wear OS by Google
+  - [Wear OS by Google](#wearosbygoogle)
   
 ## Architecture Components
 
