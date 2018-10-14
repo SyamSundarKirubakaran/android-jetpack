@@ -1,3 +1,4 @@
+
 ![Image](assets/jetpack.jpg)
 
 # Ultimate Android Jetpack Reference
@@ -522,6 +523,80 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
             - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
 
+## UI Components
+
+ * <b>Wear OS by Google</b>
+	
+	 * Material Design
+		 * A design language with a set of rules, guidelines, components and best practices for creating websites and apps.
+		 * Need:
+			 * Color palettes (Darker palettes allow for better battery life for OLEDs)
+			 * Adopt Vertical layouts
+			 * [Reserve Horizontal swipe] for activity dismissal
+			 * Make use of user interface components
+		 * Annotations:
+		 * Code:
+			 * Generating a Palette instance:
+			 ```java
+			 // Generate palette synchronously and return it
+			 public  Palette createPaletteSync(Bitmap bitmap)  {
+			   Palette p =  Palette.from(bitmap).generate();  
+			   return p; 
+			   
+			   // Generate palette asynchronously and use it on a different  
+			   // thread using onGenerated()
+			   public  void createPaletteAsync(Bitmap bitmap)  {
+			     Palette.from(bitmap).generate(new  PaletteAsyncListener()  {
+			       public  void onGenerated(Palette p)  {
+			         // Use generated instance  }  });  
+				} 
+			   
+			}```
+
+			* Vertical Layout:
+			```java
+			```
+			* Dismissing Activities:
+			```java
+			```
+
+
+			 
+	 Watch Face Complications
+	 Stand Alone Functionality
+
+
+Wear 1.0 -> wear 2.0 darker color palette :14
+helps with battery life for oleds
+suggests developers to adopt vertical layouts
+reserve horizontal swipe for activity dismissal :36
+new user interface components :43
+wearable action drawer
+screen
+wearable nav drawer
+content view
+wearable recycler view
+more on the material design for android wear site
+watch face complications :56
+if want to display data from another app they need a 1-1 agreement in both business and technical terms
+alleviation: complications api
+complications watch term: areas of watch face that display info (other than time) 1:57
+ex. date, phases of the moon
+extended concept to smartwatches
+allows for any app to publish data for watch faces
+watch faces can be made to view the data that fits their style
+helps user engagement and mindshare
+helps watch face makers add utility
+can have watch face with data utilities they need
+more in dev documentation
+stand alone functionality 2:06
+before required phone app to communicate with the cloud
+in 2.0 apps can access the internet without the corresponding phone app installed on their phone
+allows use with other ecosystems as there is no dependency on android (like an iphone)
+app distribution 2:30
+google play store on watch
+users can download apps directly
+
 ### TODO
 
     - Complete the remaining components : work in Progress.!
@@ -544,15 +619,4 @@ Android Jetpack is the next generation of components and tools along with Archit
 ```
 
 ### Contributions
-Just make pull request. You are in!
-        
-                
-        
-        
-    
-    
-    
-          
-        
-        
-
+Just make pull request. You are in
