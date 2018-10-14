@@ -450,7 +450,7 @@ Android Jetpack is the next generation of components and tools along with Archit
             <p align="center">
                 <img src="assets/runtime_permission_request_2x.jpg">
             </p>
-        - <b><br/>Install Time permissions<br/></b>
+        - <b>Install Time permissions</b><br>
             <p align="center">
                 <img src="assets/install_time_permissions_dialog_2x.jpg">
             </p>
