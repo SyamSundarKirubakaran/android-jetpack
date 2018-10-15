@@ -598,9 +598,9 @@ Android Jetpack is the next generation of components and tools along with Archit
             - Chains
             - Virtual Helpers objects
             - Optimizer
-      <p align="center">
-            <img src="assets/constraint.gif">
-      </p><br>
+            <p align="center">
+               <img src="assets/constraint.gif">
+            </p>
 
 ### TODO
 
