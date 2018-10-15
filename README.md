@@ -425,7 +425,7 @@ Android Jetpack is the next generation of components and tools along with Archit
 ## Behaviour Components
 
 * <b>Permissions</b>
-    - <b>Need:</b>
+    - <b>Need</b>
         - Android apps require permissions from the user to access sensitive Data from the device.
         - Normal permissions such as
             - `ACCESS_NETWORK_STATE`
@@ -522,6 +522,86 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
             - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
 
+## UI Components
+
+* <b>Layout</b>
+    - A layout defines the structure for a user interface in your app, such as in an activity. All elements in the layout are built using a hierarchy of View and ViewGroup objects. 
+    - <b>View</b>
+        - The UI consists of a hierarchy of objects called views — every element of the screen is a view. The View class represents the basic building block for all UI components, and the base class for classes that provide interactive UI components such as buttons, checkboxes, and text entry fields.
+    - <b>ViewGroup</b>
+        - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
+  
+    - <b>Layout Attributes</b> <br>
+      - <b>ID</b><br>
+         - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
+      - <b>Height & Width</b><br>
+         - It describes about the Height and Width of the view.<br><br>
+         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.<br>
+         <p align="center">
+            <img src="assets/margin&padding.png">
+          </p><br>
+       - <b>Margin and Padding</b><br>
+          - Margins are the spaces outside the border, between the border and the other elements next to this view.
+          - Padding is the space inside the border, between the border and the actual view’s content.<br>
+       - <b>Gravity & Layout_Gravity</b><br>
+          - Gravity specifies how child Views are positioned.
+          - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
+          
+     - <b>Types</b><br>
+       - <b>Linear Layout</b><br>
+       - <b>Relative Layout</b><br>
+       - <b>Frameout Layout</b><br>
+       - <b>Constraint Layout</b><br>
+              
+     - <b>Linear Layout</b><br> 
+       - A layout that arranges other views either horizontally in a single column or vertically in a single row.
+              ```xml
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="horizontal">
+                      <!-- Include other widget or layout tags here. These are considered
+                       "child views" or "children" of the linear layout -->
+                       </LinearLayout>
+              ```
+       - Set android:orientation to specify whether child views are displayed in a row or column.
+           
+         <p align="center">
+            <img src="assets/ver.png">
+          </p><br>
+        
+     - <b>Relative Layout</b><br>
+       - In a relative layout every element arranges itself relative to other elements or a parent element.
+        <p align="center">
+            <img src="assets/relative.jpg">
+          </p><br>
+          
+     - <b>Frame Layout</b><br>
+       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.       
+       - You can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
+       - Child views are drawn in a stack, with the most recently added child on top.
+        <p align="center">
+            <img src="assets/frame.jpeg">
+          </p><br>
+       
+     - <b>Constraint Layout</b><br>
+        - A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
+        - <b>Note</b><br> 
+          - ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
+          - There are currently various types of constraints that you can use:
+            - Relative positioning
+            - Margins
+            - Centering positioning
+            - Circular positioning
+            - Visibility behavior
+            - Dimension constraints
+            - Chains
+            - Virtual Helpers objects
+            - Optimizer
+      <p align="center">
+            <img src="assets/constraint.gif">
+      </p><br>
+
 ### TODO
 
     - Complete the remaining components : work in Progress.!
@@ -545,14 +625,3 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ### Contributions
 Just make pull request. You are in!
-        
-                
-        
-        
-    
-    
-    
-          
-        
-        
-
