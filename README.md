@@ -31,11 +31,11 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Android KTX
   - Multidex
   - Test
-* Behavior Components
+* Behaviour Components
   - Download manager
   - Media & playback
   - Notifications
-  - Permissions
+  - [Permissions](#Permissions)
   - Sharing
   - Slices
 * UI components
@@ -422,6 +422,106 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
 
+## Behaviour Components
+
+* <b>Permissions</b>
+    - <b>Need</b>
+        - Android apps require permissions from the user to access sensitive Data from the device.
+        - Normal permissions such as
+            - `ACCESS_NETWORK_STATE`
+            - `ACCESS_WIFI_STATE`
+            - `SET_WALLPAPER`
+            - `VIBRATE`
+            - `WAKE_LOCK` etc
+            are provided by the Android system itself. 
+        - However Dangerous permissions like,
+            - `READ_CALL_LOG`
+            - `CAMERA`
+            - `READ_CONTACTS`
+            - `RECORD_AUDIO`
+            - `ACCESS_FINE_LOCATION` 
+            - `ACCESS_COARSE_LOCATION` etc that can affects user's privacy require explicit permissions from the user.
+        - In <b>Android 5.1.1</b>(Lollipop - API 22) or lower requests all dangerous permissions in the install time itself. If they are granted, only then the app will be installed
+        - In <b>Android 6.0</b> (Marshmallow - API 23 or newer) requests the dangerous permissions only at the runtime. 
+        - So your app should always check and request permissions at runtime to prevent [security Exceptions](https://developer.android.com/reference/java/lang/SecurityException) and app crashing.
+        
+    - <b>Representation:</b>
+        - <b>Runtime Permissions</b><br>
+            <p align="center">
+                <img src="assets/runtime_permission_request_2x.jpg">
+            </p>
+        - <b>Install Time permissions</b><br>
+            <p align="center">
+                <img src="assets/install_time_permissions_dialog_2x.jpg">
+            </p>
+
+    - <b>Code:</b>
+        - <b>In the App Manifest:</b>
+          Add the required `uses-permission` tag as a child to the Manifest element
+          ```xml
+              <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+                <uses-permission android:name="android.permission.SEND_SMS"/>
+                <!-- other permissions go here -->
+                <application ...>
+                    ...
+                </application>
+              </manifest>
+          ```
+        - <b>In the Activity requiring the permission:</b>
+            ```java
+                // Here, thisActivity is the current activity
+                if (ContextCompat.checkSelfPermission(thisActivity,
+                        Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    // Should we show an explanation why.
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(thisActivity,
+                            Manifest.permission.READ_CONTACTS)) {
+                        // Show an explanation to the user *asynchronously* -- don't block
+                        // this thread waiting for the user's response! After the user
+                        // sees the explanation, try again to request the permission.
+                    } else {
+                        // No explanation needed; request the permission
+                        ActivityCompat.requestPermissions(thisActivity,
+                                new String[]{Manifest.permission.READ_CONTACTS},
+                                MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+                        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                        // app-defined int constant. The callback method gets the
+                        // result of the request.
+                    }
+                } else {
+                    // Permission has already been granted
+                }
+            ```
+        - <b>Handling the user's response:</b>
+            - After the user grants or denies the permission, the system invoke onRequestPermissionsResult method. Your App must override the method and handle the functionality if the permission is granted, or disable that particular functionality if denied. If the user denies the permission for multiple times the system them also shows the dialog with the `Never Ask Again` checkbox. Hence always check if the permission is available at runtime.
+            ```java
+                @Override
+                public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+                    switch (requestCode) {
+                        case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+                            // If request is cancelled, the result arrays are empty.
+                            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                // permission was granted, yay! Do the
+                                // contacts-related task you need to do.
+                            } else {
+                                // permission denied, boo! Disable the
+                                // functionality that depends on this permission.
+                            }
+                            return;
+                        }
+                        // other 'case' lines to check for other
+                        // permissions this app might request.
+                    }
+                }
+            ```
+        - <b>Permissions of Optional Hardware:</b><br>
+            - For using certain harware features such as camera or GPS your app needs permission. However not all devices posses all the required hardwares. So, in the Android Manifest file request for the permission as shown below,
+            ```xml
+                <uses-feature android:name="android.hardware.camera" android:required="false" />
+            ```
+            - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
+
 ## UI Components
 
 * <b>Layout</b>
@@ -431,38 +531,38 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>ViewGroup</b>
         - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
   
-  * <b>Layout Attributes</b> <br>
-        - <b>ID</b><br>
-                  - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
-         - <b>Height & Width</b><br>
-                -It describes about the Height and Width of the view.<br><br>
+    - <b>Layout Attributes</b> <br>
+      - <b>ID</b><br>
+         - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
+      - <b>Height & Width</b><br>
+         - It describes about the Height and Width of the view.<br><br>
          - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.<br>
          <p align="center">
             <img src="assets/margin&padding.png">
           </p><br>
-          - <b>Margin and Padding</b><br>
-                - Margins are the spaces outside the border, between the border and the other elements next to this view.
-                - Padding is the space inside the border, between the border and the actual view’s content.<br>
-         -<b>Gravity & Layout_Gravity</b><br>
-            - Gravity specifies how child Views are positioned.
-            - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
+       - <b>Margin and Padding</b><br>
+          - Margins are the spaces outside the border, between the border and the other elements next to this view.
+          - Padding is the space inside the border, between the border and the actual view’s content.<br>
+       - <b>Gravity & Layout_Gravity</b><br>
+          - Gravity specifies how child Views are positioned.
+          - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
           
-       * <b>Types</b><br>
-              - <b>Linear Layout</b><br>
-              - <b>Relative Layout</b><br>
-              - <b>Frameout Layout</b><br>
-              - <b>Constraint Layout</b><br>
+     - <b>Types</b><br>
+       - <b>Linear Layout</b><br>
+       - <b>Relative Layout</b><br>
+       - <b>Frameout Layout</b><br>
+       - <b>Constraint Layout</b><br>
               
-       ### Linear Layout 
+     - <b>Linear Layout</b><br> 
        - A layout that arranges other views either horizontally in a single column or vertically in a single row.
               ```xml
-               <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-          android:orientation="horizontal">
-          <!-- Include other widget or layout tags here. These are considered
-           "child views" or "children" of the linear layout -->
-            </LinearLayout>
+                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="horizontal">
+                      <!-- Include other widget or layout tags here. These are considered
+                       "child views" or "children" of the linear layout -->
+                       </LinearLayout>
               ```
        - Set android:orientation to specify whether child views are displayed in a row or column.
            
@@ -470,45 +570,41 @@ Android Jetpack is the next generation of components and tools along with Archit
             <img src="assets/ver.png">
           </p><br>
         
-       ### Relative Layout
+     - <b>Relative Layout</b><br>
        - In a relative layout every element arranges itself relative to other elements or a parent element.
         <p align="center">
             <img src="assets/relative.jpg">
           </p><br>
           
-       ### Frame Layout
-       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.
-       
-       - ou can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
-       
+     - <b>Frame Layout</b><br>
+       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.       
+       - You can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
        - Child views are drawn in a stack, with the most recently added child on top.
         <p align="center">
             <img src="assets/frame.jpeg">
           </p><br>
        
-    ### Constraint Layout
-    
-    -A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
-    <b>Note</b> -  ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
-    
-    - There are currently various types of constraints that you can use:
-
-        - Relative positioning
-        - Margins
-        - Centering positioning
-        - Circular positioning
-        - Visibility behavior
-        - Dimension constraints
-        - Chains
-        - Virtual Helpers objects
-        - Optimizer
+     - <b>Constraint Layout</b><br>
+        - A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
+        - <b>Note</b><br> 
+          - ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
+          - There are currently various types of constraints that you can use:
+            - Relative positioning
+            - Margins
+            - Centering positioning
+            - Circular positioning
+            - Visibility behavior
+            - Dimension constraints
+            - Chains
+            - Virtual Helpers objects
+            - Optimizer
       <p align="center">
             <img src="assets/constraint.gif">
-          </p><br>
-   
-          
+      </p><br>
+
 ### TODO
-    - Complete the remaining components : work on Progress.!
+
+    - Complete the remaining components : work in Progress.!
         
 ### License
 ```
@@ -529,14 +625,3 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ### Contributions
 Just make pull request. You are in!
-        
-                
-        
-        
-    
-    
-    
-          
-        
-        
-
