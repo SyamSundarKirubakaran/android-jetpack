@@ -768,10 +768,10 @@ Android Jetpack is the next generation of components and tools along with Archit
             PROVIDER_CHOOSER_REQUEST_CODE);
             ```
         * <b>Representation:</b>     
-        - <b>Complications on a Watchface:</b><br>
+          - <b>Complications on a Watchface:</b><br>
                 <p align="center">
-                    <img src="assets/watchfacecomplication.png">
-            </p>
+                    <img src="assets/watchfacecomplication.png" height=500>
+              </p>
       - <b>Discussion:</b><br>
         Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
     
