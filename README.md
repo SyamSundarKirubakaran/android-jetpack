@@ -426,7 +426,7 @@ Android Jetpack is the next generation of components and tools along with Archit
 ## Behaviour Components
 
 * <b>Permissions</b>
-    - <b>Need:</b>
+    - <b>Need</b>
         - Android apps require permissions from the user to access sensitive Data from the device.
         - Normal permissions such as
             - `ACCESS_NETWORK_STATE`
@@ -525,21 +525,91 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ## UI Components
 
-- Wear OS by Google
+* <b>Layout</b>
+    - A layout defines the structure for a user interface in your app, such as in an activity. All elements in the layout are built using a hierarchy of View and ViewGroup objects. 
+    - <b>View</b>
+        - The UI consists of a hierarchy of objects called views — every element of the screen is a view. The View class represents the basic building block for all UI components, and the base class for classes that provide interactive UI components such as buttons, checkboxes, and text entry fields.
+    - <b>ViewGroup</b>
+        - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
+  
+    - <b>Layout Attributes</b> <br>
+      - <b>ID</b><br>
+         - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
+      - <b>Height & Width</b><br>
+         - It describes about the Height and Width of the view.<br><br>
+         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.<br>
+         <p align="center">
+            <img src="assets/margin&padding.png">
+          </p><br>
+       - <b>Margin and Padding</b><br>
+          - Margins are the spaces outside the border, between the border and the other elements next to this view.
+          - Padding is the space inside the border, between the border and the actual view’s content.<br>
+       - <b>Gravity & Layout_Gravity</b><br>
+          - Gravity specifies how child Views are positioned.
+          - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
+          
+     - <b>Types</b><br>
+       - <b>Linear Layout</b><br>
+       - <b>Relative Layout</b><br>
+       - <b>Frameout Layout</b><br>
+       - <b>Constraint Layout</b><br>
+              
+     - <b>Linear Layout</b><br> 
+       - A layout that arranges other views either horizontally in a single column or vertically in a single row.<br>
+              ```xml
+                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="horizontal">
+                 </LinearLayout>
+              ```
+       - Set android:orientation to specify whether child views are displayed in a row or column.
+           
+         <p align="center">
+            <img src="assets/ver.png">
+          </p><br>
+        
+     - <b>Relative Layout</b><br>
+       - In a relative layout every element arranges itself relative to other elements or a parent element.
+        <p align="center">
+            <img src="assets/relative.jpg">
+          </p><br>
+          
+     - <b>Frame Layout</b><br>
+       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.       
+       - You can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
+       - Child views are drawn in a stack, with the most recently added child on top.
+        <p align="center">
+            <img src="assets/frame.jpeg">
+          </p><br>
+       
+     - <b>Constraint Layout</b><br>
+        - A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
+        - <b>Note</b><br> 
+          - ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
+          - There are currently various types of constraints that you can use:
+            - Relative positioning
+            - Margins
+            - Centering positioning
+            - Circular positioning
+            - Visibility behavior
+            - Dimension constraints
+            - Chains
+            - Virtual Helpers objects
+            - Optimizer
+            <p align="center">
+               <img src="assets/constraint.gif">
+            </p>
 
-    - Material Design 
-
+- <b>Wear OS</b>
+    - Now, follows Material Design Guidelines.
     - A design language with a set of rules, guidelines, components and best practices for creating websites and applications.
-
-    - Need:
-
+    - <b>Need:</b>
         - Color palettes (Darker palettes allow for better battery life for OLEDs)
         - Adopt vertical layouts
         - Horizontal swipe (Reserved for activity dismissal)
         - Make use of user interface components
-
-    - Code:
-
+    - <b>Code:</b>
         - Generating a palette instance:
 
         ```java
@@ -559,19 +629,17 @@ Android Jetpack is the next generation of components and tools along with Archit
         			}
         ```
 
-        - Representation:
-
-        - <b>Wear OS Palette List</b><br>
+        - <b>Representation:</b>
+          - <b>Wear OS Palette List</b><br>
             <p align="center">
-                <img src="assets/palettelist.png">
+                <img src="assets/palettelist.png" height=500 width=400>
             </p>
 
-        - <b>Corresponding Wear OS UI</b><br>
+          - <b>Corresponding Wear OS UI</b><br>
             <p align="center">
                 <img src="assets/wearospaletteexample.png">
             </p>
-        - Vertical Layout
-
+        - <b>Vertical Layout</b>
         ```xml
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         	// Retrieves the tools 
@@ -589,8 +657,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         	</LinearLayout>
         ```
 
-        - Horizontal Swipe for Dismissing Activities:
-
+        - <b>Horizontal Swipe for Dismissing Activities:</b>
         ```java
         public class SwipeDismissFragment extends Fragment {
         		private final Callback mCallback =
@@ -624,34 +691,25 @@ Android Jetpack is the next generation of components and tools along with Archit
         	}
         ```
 
-    - Representation:
-        - <b>Do:</b><br>
+    - <b>Representation:</b>
+        - <b>Do and Don't:</b><br>
             <p align="center">
-                <img src="assets/1dlayout.png" height=480 width=270>
-            </p>
-        - <b>Do Not:</b><br>
-            <p align="center">
-                <img src="assets/2dlayoutdont.png" height=480 width=270>
+                <img src="assets/1dlayout.png" height=480 width=300>
+                <img src="assets/2dlayoutdont.png" height=480 width=300>
             </p>
         - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
 
 
-    * Watch Face Complications
-
+    * <b>Watch Face Complications</b>
         * Complications are features of a watch face that are displayed in addition to the time. The Complications API allows for seamless integration with API calls.
-
-        * Need:
-
+        * <b>Need:</b>
             * Exposing data to complications
             * Adding complications to a watch face
-
-        * Code:
-
+        * <b>Code:</b>
             * Exposing data to complications
-
              ```java
-            @Override
-            public void onComplicationUpdate(
+              @Override
+              public void onComplicationUpdate(
                 int complicationId, int dataType, ComplicationManager complicationManager) {
          
                 Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
@@ -695,14 +753,11 @@ Android Jetpack is the next generation of components and tools along with Archit
                 }
             }
             ```
-    Discussion:
+      - <b>Discussion:</b><br>
+        To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
 
-    To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
-
-    * Adding complications to a watch face
-
-        * Setting other data providers
-
+    * <b>Adding complications to a watch face</b>
+      * Setting other data providers
             ```java
             startActivityForResult(
                 ComplicationHelperActivity.createProviderChooserHelperIntent(
@@ -712,20 +767,15 @@ Android Jetpack is the next generation of components and tools along with Archit
                 ComplicationData.TYPE_LARGE_IMAGE),
             PROVIDER_CHOOSER_REQUEST_CODE);
             ```
-
-        * Representation:
-            
+        * <b>Representation:</b>     
         - <b>Complications on a Watchface:</b><br>
                 <p align="center">
                     <img src="assets/watchfacecomplication.png">
             </p>
-
-    Discussion:
-
-    Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
-
-    * Receiving complication data
-
+      - <b>Discussion:</b><br>
+        Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
+    
+    * <b>Receiving complication data</b>
         ```java
         private void initializeComplicationsAndBackground() {
             ...
@@ -757,21 +807,14 @@ Android Jetpack is the next generation of components and tools along with Archit
                         setActiveComplications(COMPLICATION_IDS);
                     }
             ```
-
-    Discussion: A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
-
-    * Stand Alone Functionality
-
+     - <b>Discussion:</b><br> 
+          A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
+    * <b>Stand Alone Functionality</b>
         * The use of a Wear OS application to communicate with the cloud without the requirement of a corresponding bridge application on your Android smartphone. Wear OS also has the Google Play store in order to download applications straight to a Wear OS device
-
-        * Need:
-
+        * <b>Need:</b>
             * Standalone Identifier
-
-        * Code:
-
-        * Standalone Identifier
-
+        * <b>Code:</b>
+          * Standalone Identifier
             ```xml
             <application>
             ...
@@ -783,11 +826,8 @@ Android Jetpack is the next generation of components and tools along with Archit
             ...
             </application>
             ```
-
-        Discussion:
-
-        Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
-
+        - <b>Discussion:</b><br>
+          Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
 
 ### TODO
 
@@ -811,4 +851,4 @@ Android Jetpack is the next generation of components and tools along with Archit
 ```
 
 ### Contributions
-Just make pull request. You are in
+Just make pull request. You are in!
