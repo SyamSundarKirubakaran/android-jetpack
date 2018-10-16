@@ -527,39 +527,39 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 - Wear OS by Google
 
-  - Material Design 
+    - Material Design 
 
     - A design language with a set of rules, guidelines, components and best practices for creating websites and applications.
 
     - Need:
 
-      - Color palettes (Darker palettes allow for better battery life for OLEDs)
-      - Adopt vertical layouts
-      - Horizontal swipe (Reserved for activity dismissal)
-      - Make use of user interface components
+        - Color palettes (Darker palettes allow for better battery life for OLEDs)
+        - Adopt vertical layouts
+        - Horizontal swipe (Reserved for activity dismissal)
+        - Make use of user interface components
 
     - Code:
 
-      - Generating a palette instance:
+        - Generating a palette instance:
 
         ```java
-        // Generate palette synchronously and return it
-        			 public  Palette createPaletteSync(Bitmap bitmap)  {
-        			   Palette p =  Palette.from(bitmap).generate();  
-        			   return p; 
+                    // Generate palette synchronously and return it
+        			public  Palette createPaletteSync(Bitmap bitmap)  {
+        			    Palette p =  Palette.from(bitmap).generate();  
+        			    return p; 
         			   
-        			   // Generate palette asynchronously and use it on a different  
-        			   // thread using onGenerated()
-        			   public  void createPaletteAsync(Bitmap bitmap)  {
-        			     Palette.from(bitmap).generate(new  PaletteAsyncListener()  {
-        			       public  void onGenerated(Palette p)  {
-        			         // Use generated instance  }  });  
+        			    // Generate palette asynchronously and use it on a different  
+        			    // thread using onGenerated()
+        			    public  void createPaletteAsync(Bitmap bitmap)  {
+        			        Palette.from(bitmap).generate(new  PaletteAsyncListener()  {
+        			        public  void onGenerated(Palette p)  {
+        			        // Use generated instance  }  });  
         				} 
         			   
         			}
         ```
 
-      - Representation:
+        - Representation:
 
         - <b>Wear OS Palette List</b><br>
             <p align="center">
@@ -570,7 +570,7 @@ Android Jetpack is the next generation of components and tools along with Archit
             <p align="center">
                 <img src="assets/wearospaletteexample.png">
             </p>
-      - Vertical Layout
+        - Vertical Layout
 
         ```xml
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -589,7 +589,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         	</LinearLayout>
         ```
 
-      - Horizontal Swipe for Dismissing Activities:
+        - Horizontal Swipe for Dismissing Activities:
 
         ```java
         public class SwipeDismissFragment extends Fragment {
@@ -624,60 +624,60 @@ Android Jetpack is the next generation of components and tools along with Archit
         	}
         ```
 
-      - Representation:
+    - Representation:
         - <b>Do:</b><br>
             <p align="center">
-                <img src="assets/1dlayout.png">
+                <img src="assets/1dlayout.png" height=480 width=270>
             </p>
         - <b>Do Not:</b><br>
             <p align="center">
-                <img src="assets/2dlayoutdont.png">
+                <img src="assets/2dlayoutdont.png" height=480 width=270>
             </p>
-      - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
+        - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
 
 
- * Watch Face Complications
+    * Watch Face Complications
 
-    * Complications are features of a watch face that are displayed in addition to the time. The Complications API allows for seamless integration with API calls.
+        * Complications are features of a watch face that are displayed in addition to the time. The Complications API allows for seamless integration with API calls.
 
-    * Need:
+        * Need:
 
-       * Exposing data to complications
-       * Adding complications to a watch face
+            * Exposing data to complications
+            * Adding complications to a watch face
 
-    * Code:
+        * Code:
 
-       * Exposing data to complications
+            * Exposing data to complications
 
-         ```java
-         @Override
-         public void onComplicationUpdate(
+             ```java
+            @Override
+            public void onComplicationUpdate(
                 int complicationId, int dataType, ComplicationManager complicationManager) {
          
-            Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
+                Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
          
-            // Used to create a unique key to use with SharedPreferences for this complication.
-            ComponentName thisProvider = new ComponentName(this, getClass());
+                // Used to create a unique key to use with SharedPreferences for this complication.
+                ComponentName thisProvider = new ComponentName(this, getClass());
          
-            // Retrieves your data, in this case, we grab an incrementing number from SharedPrefs.
-            SharedPreferences preferences =
-              getSharedPreferences( ComplicationTapBroadcastReceiver.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+                // Retrieves your data, in this case, we grab an incrementing number from SharedPrefs.
+                SharedPreferences preferences =
+                  getSharedPreferences( ComplicationTapBroadcastReceiver.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
          
-            int number =
-                    preferences.getInt(
-                            ComplicationTapBroadcastReceiver.getPreferenceKey(
-                                    thisProvider, complicationId),
-                            0);
-            String numberText = String.format(Locale.getDefault(), "%d!", number);
+                int number =
+                        preferences.getInt(
+                                ComplicationTapBroadcastReceiver.getPreferenceKey(
+                                        thisProvider, complicationId),
+                                0);
+                String numberText = String.format(Locale.getDefault(), "%d!", number);
          
-            ComplicationData complicationData = null;
+                ComplicationData complicationData = null;
          
-            switch (dataType) {
-                case ComplicationData.TYPE_SHORT_TEXT:
-                    complicationData =
+                switch (dataType) {
+                    case ComplicationData.TYPE_SHORT_TEXT:
+                        complicationData =
                             new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                                    .setShortText(ComplicationText.plainText(numberText))
-                                    .build();
+                                .setShortText(ComplicationText.plainText(numberText))
+                                .build();
                     break;
                 default:
                     if (Log.isLoggable(TAG, Log.WARN)) {
@@ -692,102 +692,101 @@ Android Jetpack is the next generation of components and tools along with Archit
                 // If no data is sent, we still need to inform the ComplicationManager, so
                 // the update job can finish and the wake lock isn't held any longer.
                 complicationManager.noUpdateRequired(complicationId);
+                }
             }
-         }
-         ```
+            ```
+    Discussion:
 
-         Discussion:
+    To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
 
-         To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
+    * Adding complications to a watch face
 
-       * Adding complications to a watch face
-
-          * Setting other data providers
+        * Setting other data providers
 
             ```java
             startActivityForResult(
-              ComplicationHelperActivity.createProviderChooserHelperIntent(
-                 getActivity(),
-                 watchFace,
-                 complicationId,
-                 ComplicationData.TYPE_LARGE_IMAGE),
-              PROVIDER_CHOOSER_REQUEST_CODE);
+                ComplicationHelperActivity.createProviderChooserHelperIntent(
+                getActivity(),
+                watchFace,
+                complicationId,
+                ComplicationData.TYPE_LARGE_IMAGE),
+            PROVIDER_CHOOSER_REQUEST_CODE);
             ```
 
-          * Representation:
+        * Representation:
             
-            - <b>Complications on a Watchface:</b><br>
+        - <b>Complications on a Watchface:</b><br>
                 <p align="center">
                     <img src="assets/watchfacecomplication.png">
             </p>
 
-            Discussion:
+    Discussion:
 
-            Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
+    Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
 
-          * Receiving complication data
+    * Receiving complication data
 
-            ```java
-            private void initializeComplicationsAndBackground() {
-            			...
-                        mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+        ```java
+        private void initializeComplicationsAndBackground() {
+            ...
+            mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
             
-                        // Creates a ComplicationDrawable for each location where the user can render a
-                        // complication on the watch face. In this watch face, we create one for left, right,
-                        // and background, but you could add many more.
-                        ComplicationDrawable leftComplicationDrawable =
-                                new ComplicationDrawable(getApplicationContext());
+            // Creates a ComplicationDrawable for each location where the user can render a
+            // complication on the watch face. In this watch face, we create one for left, right,
+            // and background, but you could add many more.
+            ComplicationDrawable leftComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+            ComplicationDrawable rightComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
             
-                        ComplicationDrawable rightComplicationDrawable =
-                                new ComplicationDrawable(getApplicationContext());
+            ComplicationDrawable backgroundComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+                // Adds new complications to a SparseArray to simplify setting styles and ambient
+                // properties for all complications, i.e., iterate over them all.
+                mComplicationDrawableSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
             
-                        ComplicationDrawable backgroundComplicationDrawable =
-                                new ComplicationDrawable(getApplicationContext());
+                mComplicationDrawableSparseArray.put(LEFT_COMPLICATION_ID,              leftComplicationDrawable);
+                mComplicationDrawableSparseArray.put(RIGHT_COMPLICATION_ID,             rightComplicationDrawable);
+                mComplicationDrawableSparseArray.put(
+                    BACKGROUND_COMPLICATION_ID, backgroundComplicationDrawable);
             
-                        // Adds new complications to a SparseArray to simplify setting styles and ambient
-                        // properties for all complications, i.e., iterate over them all.
-                        mComplicationDrawableSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
-            
-                        mComplicationDrawableSparseArray.put(LEFT_COMPLICATION_ID, leftComplicationDrawable);
-                        mComplicationDrawableSparseArray.put(RIGHT_COMPLICATION_ID, rightComplicationDrawable);
-                        mComplicationDrawableSparseArray.put(
-                                BACKGROUND_COMPLICATION_ID, backgroundComplicationDrawable);
-            
-                    	// Recieves data from complication ids within the array
+                // Recieves data from complication ids within the array
                 setComplicationsActiveAndAmbientColors(mWatchHandHighlightColor);
                         setActiveComplications(COMPLICATION_IDS);
                     }
             ```
 
-         Discussion: A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
+    Discussion: A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
 
- * Stand Alone Functionality
+    * Stand Alone Functionality
 
-    * The use of a Wear OS application to communicate with the cloud without the requirement of a corresponding bridge application on your Android smartphone. Wear OS also has the Google Play store in order to download applications straight to a Wear OS device
+        * The use of a Wear OS application to communicate with the cloud without the requirement of a corresponding bridge application on your Android smartphone. Wear OS also has the Google Play store in order to download applications straight to a Wear OS device
 
-    * Need:
+        * Need:
 
-       * Standalone Identifier
+            * Standalone Identifier
 
-    * Code:
+        * Code:
 
-       * Standalone Identifier
+        * Standalone Identifier
 
-         ```xml
-         <application>
-         ...
-           <meta-data
-             android:name="com.google.android.wearable.standalone"
-             // android value of true means the Wear OS application is standalone
-             // value is false if it is dependant on a phone application
-             android:value="true" />
-         ...
-         </application>
-         ```
+            ```xml
+            <application>
+            ...
+            <meta-data
+                android:name="com.google.android.wearable.standalone"
+                // android value of true means the Wear OS application is standalone
+                // value is false if it is dependant on a phone application
+                android:value="true" />
+            ...
+            </application>
+            ```
 
-         Discussion:
+        Discussion:
 
-         Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
+        Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
 
 
 ### TODO
