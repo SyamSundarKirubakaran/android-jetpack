@@ -1,3 +1,4 @@
+
 ![Image](assets/jetpack.jpg)
 
 # Ultimate Android Jetpack Reference
@@ -46,7 +47,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Layout
   - Palette
   - TV
-  - Wear OS by Google
+  - [Wear OS by Google](#wearosbygoogle)
   
 ## Architecture Components
 
@@ -599,6 +600,234 @@ Android Jetpack is the next generation of components and tools along with Archit
             <p align="center">
                <img src="assets/constraint.gif">
             </p>
+
+- <b>Wear OS</b>
+    - Now, follows Material Design Guidelines.
+    - A design language with a set of rules, guidelines, components and best practices for creating websites and applications.
+    - <b>Need:</b>
+        - Color palettes (Darker palettes allow for better battery life for OLEDs)
+        - Adopt vertical layouts
+        - Horizontal swipe (Reserved for activity dismissal)
+        - Make use of user interface components
+    - <b>Code:</b>
+        - Generating a palette instance:
+
+        ```java
+                    // Generate palette synchronously and return it
+        			public  Palette createPaletteSync(Bitmap bitmap)  {
+        			    Palette p =  Palette.from(bitmap).generate();  
+        			    return p; 
+        			   
+        			    // Generate palette asynchronously and use it on a different  
+        			    // thread using onGenerated()
+        			    public  void createPaletteAsync(Bitmap bitmap)  {
+        			        Palette.from(bitmap).generate(new  PaletteAsyncListener()  {
+        			        public  void onGenerated(Palette p)  {
+        			        // Use generated instance  }  });  
+        				} 
+        			   
+        			}
+        ```
+
+        - <b>Representation:</b>
+          - <b>Wear OS Palette List</b><br>
+            <p align="center">
+                <img src="assets/palettelist.png" height=500 width=400>
+            </p>
+
+          - <b>Corresponding Wear OS UI</b><br>
+            <p align="center">
+                <img src="assets/wearospaletteexample.png">
+            </p>
+        - <b>Vertical Layout</b>
+        ```xml
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        	// Retrieves the tools 
+        	xmlns:tools="http://schemas.android.com/tools"
+        	// Sets default height and width to depend on a parent
+        	android:layout_width="match_parent" 
+        	android:layout_height="match_parent"
+        	// Sets default orientation to vertical
+        	android:orientation="vertical">
+            // Sets text for app face
+        	<TextView  android:id="@+id/text"  
+        		android:layout_width="wrap_content"  
+        		android:layout_height="wrap_content"  
+        		android:text="@string/hello_square"  />  
+        	</LinearLayout>
+        ```
+
+        - <b>Horizontal Swipe for Dismissing Activities:</b>
+        ```java
+        public class SwipeDismissFragment extends Fragment {
+        		private final Callback mCallback =
+        			new Callback() {
+        				@Override
+        					public void onSwipeStart() {
+        					// optional
+        				}
+        				@Override
+        					public void onSwipeCancelled() {
+        					// optional
+        				}
+        				@Override
+        				public void onDismissed(SwipeDismissFrameLayout layout) {
+        					// Code here for custom behavior such as going up the
+        					// back stack and destroying the fragment but staying in the app.
+        				}
+              };
+        	@Override
+        	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        		SwipeDismissFrameLayout swipeLayout = new SwipeDismissFrameLayout(getActivity());
+        		// If the fragment should fill the screen (optional), then in the layout file,
+        		// in the android.support.wear.widget.SwipeDismissFrameLayout element,
+        		// set the android:layout_width and android:layout_height attributes
+        		// to "match_parent".
+        		View inflatedView = inflater.inflate(R.layout.swipe_dismiss_frame_layout, swipeLayout, false);
+        		swipeLayout.addView(inflatedView);
+        		swipeLayout.addCallback(mCallback);
+        		return swipeLayout;
+        		}
+        	}
+        ```
+
+    - <b>Representation:</b>
+        - <b>Do and Don't:</b><br>
+            <p align="center">
+                <img src="assets/1dlayout.png" height=480 width=300>
+                <img src="assets/2dlayoutdont.png" height=480 width=300>
+            </p>
+        - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
+
+
+    * <b>Watch Face Complications</b>
+        * Complications are features of a watch face that are displayed in addition to the time. The Complications API allows for seamless integration with API calls.
+        * <b>Need:</b>
+            * Exposing data to complications
+            * Adding complications to a watch face
+        * <b>Code:</b>
+            * Exposing data to complications
+             ```java
+              @Override
+              public void onComplicationUpdate(
+                int complicationId, int dataType, ComplicationManager complicationManager) {
+         
+                Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
+         
+                // Used to create a unique key to use with SharedPreferences for this complication.
+                ComponentName thisProvider = new ComponentName(this, getClass());
+         
+                // Retrieves your data, in this case, we grab an incrementing number from SharedPrefs.
+                SharedPreferences preferences =
+                  getSharedPreferences( ComplicationTapBroadcastReceiver.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+         
+                int number =
+                        preferences.getInt(
+                                ComplicationTapBroadcastReceiver.getPreferenceKey(
+                                        thisProvider, complicationId),
+                                0);
+                String numberText = String.format(Locale.getDefault(), "%d!", number);
+         
+                ComplicationData complicationData = null;
+         
+                switch (dataType) {
+                    case ComplicationData.TYPE_SHORT_TEXT:
+                        complicationData =
+                            new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
+                                .setShortText(ComplicationText.plainText(numberText))
+                                .build();
+                    break;
+                default:
+                    if (Log.isLoggable(TAG, Log.WARN)) {
+                        Log.w(TAG, "Unexpected complication type " + dataType);
+                    }
+            }
+         
+            if (complicationData != null) {
+                complicationManager.updateComplicationData(complicationId, complicationData);
+         
+            } else {
+                // If no data is sent, we still need to inform the ComplicationManager, so
+                // the update job can finish and the wake lock isn't held any longer.
+                complicationManager.noUpdateRequired(complicationId);
+                }
+            }
+            ```
+      - <b>Discussion:</b><br>
+        To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
+
+    * <b>Adding complications to a watch face</b>
+      * Setting other data providers
+            ```java
+            startActivityForResult(
+                ComplicationHelperActivity.createProviderChooserHelperIntent(
+                getActivity(),
+                watchFace,
+                complicationId,
+                ComplicationData.TYPE_LARGE_IMAGE),
+            PROVIDER_CHOOSER_REQUEST_CODE);
+            ```
+        * <b>Representation:</b>     
+        - <b>Complications on a Watchface:</b><br>
+                <p align="center">
+                    <img src="assets/watchfacecomplication.png">
+            </p>
+      - <b>Discussion:</b><br>
+        Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
+    
+    * <b>Receiving complication data</b>
+        ```java
+        private void initializeComplicationsAndBackground() {
+            ...
+            mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+            
+            // Creates a ComplicationDrawable for each location where the user can render a
+            // complication on the watch face. In this watch face, we create one for left, right,
+            // and background, but you could add many more.
+            ComplicationDrawable leftComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+            ComplicationDrawable rightComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+            
+            ComplicationDrawable backgroundComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+                // Adds new complications to a SparseArray to simplify setting styles and ambient
+                // properties for all complications, i.e., iterate over them all.
+                mComplicationDrawableSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+            
+                mComplicationDrawableSparseArray.put(LEFT_COMPLICATION_ID,              leftComplicationDrawable);
+                mComplicationDrawableSparseArray.put(RIGHT_COMPLICATION_ID,             rightComplicationDrawable);
+                mComplicationDrawableSparseArray.put(
+                    BACKGROUND_COMPLICATION_ID, backgroundComplicationDrawable);
+            
+                // Recieves data from complication ids within the array
+                setComplicationsActiveAndAmbientColors(mWatchHandHighlightColor);
+                        setActiveComplications(COMPLICATION_IDS);
+                    }
+            ```
+     - <b>Discussion:</b><br> 
+          A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
+    * <b>Stand Alone Functionality</b>
+        * The use of a Wear OS application to communicate with the cloud without the requirement of a corresponding bridge application on your Android smartphone. Wear OS also has the Google Play store in order to download applications straight to a Wear OS device
+        * <b>Need:</b>
+            * Standalone Identifier
+        * <b>Code:</b>
+          * Standalone Identifier
+            ```xml
+            <application>
+            ...
+            <meta-data
+                android:name="com.google.android.wearable.standalone"
+                // android value of true means the Wear OS application is standalone
+                // value is false if it is dependant on a phone application
+                android:value="true" />
+            ...
+            </application>
+            ```
+        - <b>Discussion:</b><br>
+          Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
 
 ### TODO
 
