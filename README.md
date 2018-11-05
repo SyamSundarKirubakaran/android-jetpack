@@ -525,7 +525,97 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ## UI Components
 
-* <b>Layout</b>
+
+* <b>Emoji</b>
+    - EmojiCompat renders Emojis even if they don't exist in old font packages used in an older OS.
+    - <b>Need</b>
+        - Backwards compatibility of Emojis with older Android OS (API level 19 or higher)
+        - Prevents Emojis from being displayed as invalid by creating an Emoji span
+    - <b>Code</b>
+        - <b>In the App Manifest:</b> add the following meta-data tag 
+        ```xml
+            <meta-data
+               	android:name="fontProviderRequests"
+        	    android:value="Noto Color Emoji Compat"/>
+        ```
+        - <b>One-time setup</b>
+        <br/>Getting the Emoji package can be done in one of two ways:
+            - Download Emoji set at install time:
+            ```java
+                // create a request to download the latest fonts package
+                val fontRequest = FontRequst(
+                    "com.google.android.gms.fonts",
+                	"com.google.android.gms",
+                	"Noto Color Emoji Compat",
+	                R.array.com_google_android_gms_fonts_certs);
+
+                    // initialize EmojiCompat such that it sends the request
+                    val config = FontRequestEmojiCompatConfig(this, fontRequest);
+                    EmojiCompat.init(config);
+            ```
+
+            - Bundle Emoji set with the apk:
+            <br /> (Note that this increases apk size and requires app updates upon each Emoji update)
+            ```java
+                //  initialize EmojiCompat such that retrieves the fonts locally
+                val config = BundledEmojiCompatConfig(this);
+                EmpjiCompat.init(config);
+            ```
+
+        - <b>Usage:</b>
+            - <b>Display emojis by using widgets that extend from AppCompat widgets </b>
+            ```xml
+            <android.support.text.emoji.widget.EmojiAppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            ```
+        
+        - <b>Other features:</b>
+
+            - <b>How to check if EmojiCompat is finished initializing: </b>
+            <br /> Inintializing EmojiCompat may take some time so checking if it is complete may be necesasry before proceeding with displaying Emojis
+            ```java
+                val config = FontRequestEmojiCompatConfig(this, fontRequest)
+                    .registerInitCallBack(object : EmojiCompat.InitCallback() {
+                        // your code to execute when initializing is complete
+                    });
+            ```
+            - <b> How to indicate an Emoji span:</b>
+            <br /> (useful for debugging)
+            ```java
+                // colors all Emoji spans in the chosen color to distinguish them from Emojis rendered normally
+                val config = FontRequestedEmojiCompatConfig(...)
+                    .setEmojiSpanIndicatorEnabled(true)
+                    .setEmojiSpanIndicatorColor(Color.MAGENTA);
+            ```
+
+            - <b> How to Preprocess a character sequence instead of repatedly using a raw string: </b>
+            ```java
+                // processes the Emoji normally if in current font package, otherwise as Emoji Span
+                val processed : CharSequence =
+                    EmojiCompat.get()
+                        .process("neutral face \uD83D\uDE10");
+            ```
+
+            - <b> To add Emoji support to a textView Subclass, use the EmojiTextViewHelper </b>
+            ```java
+                Class MyCheckBox(context: Context) :
+                AppCompatCheckBox(context) { 
+                    private val helper: EmojiTextViewHelper = ...
+
+                    init {
+                        helper.updateTransformationMethod();
+                    }
+
+                    override fun setAllCaps(allCaps: Boolean) {
+                        super.setAllCaps(allCaps)
+                        helper.setAllCaps(allCaps);
+                    }
+                }
+
+            ```
+
+- <b>Layout</b>
     - A layout defines the structure for a user interface in your app, such as in an activity. All elements in the layout are built using a hierarchy of View and ViewGroup objects. 
     - <b>View</b>
         - The UI consists of a hierarchy of objects called views — every element of the screen is a view. The View class represents the basic building block for all UI components, and the base class for classes that provide interactive UI components such as buttons, checkboxes, and text entry fields.
