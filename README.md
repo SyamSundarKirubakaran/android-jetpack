@@ -597,7 +597,7 @@ Android Jetpack is the next generation of components and tools along with Archit
                         .process("neutral face \uD83D\uDE10");
             ```
 
-            - <b> To add Emoji support to a textView Subclass, use the EmojiTextViewHelper
+            - <b> To add Emoji support to a textView Subclass, use the EmojiTextViewHelper </b>
             ```java
                 Class MyCheckBox(context: Context) :
                 AppCompatCheckBox(context) { 
