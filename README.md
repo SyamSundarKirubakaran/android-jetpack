@@ -42,9 +42,9 @@ Android Jetpack is the next generation of components and tools along with Archit
 * UI components
   - Animation & transitions
   - Auto
-  - Emoji
+  - [Emoji](#emoji)
   - Fragment
-  - Layout
+  - [Layout](#layout)
   - Palette
   - TV
   - [Wear OS by Google](#wearosbygoogle)
