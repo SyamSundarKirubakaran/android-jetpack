@@ -190,7 +190,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         - `this` : Specifies the activity that it has the work on .i.e., <b>LifeCycleOwner</b>
         - `Observer<type>` : <b>type</b> depends on the return type of the Live Data.
 
-### LifeCycles
+### Lifecycles
 * <b>Terms:</b>
     - <b>Lifecycle:</b> An Object that defines Android Lifecycle.
     - <b>Lifecycle Owner:</b> It's an interface:
