@@ -424,6 +424,211 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
 
 ## Behaviour Components
+* <b>Notifications</b>
+    - A guildline for creating a unified notification system handling a wide variety of situations
+    - <b>Need</b>
+        - Notification Anatomy and the most common parts of
+            - `appName()`
+            - `setContentTitle()`
+            - `setContentText()`
+            - `setSmallIcon()` and `setLargeIcon()` which handle icon size
+            - `setWhen()` and `setShowWhen(False)` to show timestamps
+        - Notification Badges and Notification Actions which expand showing more information
+        - Lockscreen Notifications and Ordering using
+            - `setCategory()`
+            - `setPriority()`
+        - Notification Channels/Categories support which allows for grouping of notifications to specific scenarios
+   
+    - <b>Representation:</b>
+        - Notification Anatomy
+            <p align="center">
+                <img src="assets/notificationAnatomy.png">
+            </p>
+        - Notification Badges and Notification Actions
+            <p align="center">
+                <img src="assets/notificationBadge.png">
+            </p>
+        - Lockscreen Notifications and Ordering
+            <p align="center">
+                <img src="assets/lockscreenNotifications.png">
+            </p>
+        - Notification Channels/Categories
+            <p align="center">
+                <img src="assets/notificationChannels.png">
+            </p>
+    - <b>Code:</b>
+        - Notification Anatomy
+
+            - Requires the support library
+            ```kotlin
+            dependencies {
+                implementation "com.android.support:support-compat:28.0.0"
+            }
+            ```
+
+            - Setting Notification Content
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            ```
+            - Creating the content requires that you include a small or large icon to be drawn, the content title, the content text holding the information to be shown and the priority. This allows the system to show notifications by priority.
+
+            - Setting Notifications to be longer than the one line trucation
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Much longer text that cannot fit one line...")
+                .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            ```
+
+            - Add action buttons to the notification
+            ```kotlin
+            val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
+                action = ACTION_SNOOZE
+                putExtra(EXTRA_NOTIFICATION_ID, 0)
+            }
+            val snoozePendingIntent: PendingIntent = 
+                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)
+            val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .addAction(R.drawable.ic_snooze, getString(R.string.snooze),
+                        snoozePendingIntent)
+            ```
+
+            - Setting notification's tap action
+            ```kotlin
+            // Create an explicit intent for an Activity in your app
+                val intent = Intent(this, AlertDetails::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+                val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("My notification")
+                    .setContentText("Hello World!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    // Set the intent that will fire when the user taps the notification
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+            ```
+
+        - Notification Badges and Notification Actions
+
+            - Enabling badges
+            ```kotlin
+            val id = "my_channel_01"
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val mChannel = NotificationChannel(id, name, importance).apply {
+                description = descriptionText
+                setShowBadge(true)
+                //Setting this option to false disables notificication badges
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+            ```
+
+            - Setting custom notification counts
+            ```kotlin
+            var notification = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
+                .setContentTitle("New Messages")
+                .setContentText("You've received 3 new messages.")
+                .setSmallIcon(R.drawable.ic_notify_status)
+                .setNumber(messageCount)
+                //Change the message count here
+                .build()
+            ```
+
+            - Modifying a notifications long-press menu icon
+            ```kotlin
+            var notification = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
+                .setContentTitle("New Messages")
+                .setContentText("You've received 3 new messages.")
+                .setSmallIcon(R.drawable.ic_notify_status)
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                //You must include a small badge icon to show in constant
+                .build()
+            ```
+
+        - Lockscreen Notification and Ordering
+
+            - Setting visibility 
+            ```kotlin
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
+            //visibility is handled where VISBILITY_SECRET is mentioned
+            notificationManager.createNotificationChannel(notificationChannel);
+            ```
+
+            - There is 3 types of visibility practices:
+                - `VISIBILITY_PUBLIC` shows the notification's full content.
+                - `VISIBILITY_SECRET` doesn't show any part of this notification on the lock screen.
+                - `VISIBILITY_PRIVATE` shows basic information, such as the notification's icon and the content title, but hides the notification's full content.
+            - Setting the categories
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                //setting the category here to handle different scenarios
+            ```
+            - Options include, but not limited to:
+                - `CATEGORY_ALARM`
+                - `CATEGORY_REMINDER`
+                - `CATEGORY_EVENT`
+                - `CATEGORY_CALL`
+
+            - Setting the priority
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                //setting the priority is in the same area where you defined notification anatomy, so the same options are in effect
+            ```
+
+        - Notification Channels/Categories
+
+            - Channel Creation
+            ```kotlin
+            private fun createNotificationChannel() {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val name = getString(R.string.channel_name)
+                val descriptionText = getString(R.string.channel_description)
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                //importance is handled where IMPORTANCE_DEFAULT is mentioned
+                val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+                }
+            }
+            ```
+
+            - Setting importance level has 4 options:
+                - `IMPORTANCE_HIGH` for *Urgent* importance, makes a sound and appears as a heads-up notification
+                - `IMPORTANCE_DEFAULT` for *high* importance, makes a sound
+                - `IMPORTANCE_LOW` for *medium* importance which makes no sound
+                - `IMPORTANCE_MIN` for *low* importance which does not make a sound or appear in the status bar
 
 * <b>Permissions</b>
     - <b>Need</b>
