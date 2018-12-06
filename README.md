@@ -34,7 +34,7 @@ Android Jetpack is the next generation of components and tools along with Archit
 * Behaviour Components
   - Download manager
   - Media & playback
-  - Notifications
+  - [Notifications](#Notifications)
   - [Permissions](#Permissions)
   - Sharing
   - Slices
@@ -425,7 +425,7 @@ Android Jetpack is the next generation of components and tools along with Archit
 ## Behaviour Components
 
 * <b>Permissions</b>
-    - <b>Need:</b>
+    - <b>Need</b>
         - Android apps require permissions from the user to access sensitive Data from the device.
         - Normal permissions such as
             - `ACCESS_NETWORK_STATE`
