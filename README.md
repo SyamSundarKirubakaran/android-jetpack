@@ -1,3 +1,4 @@
+
 ![Image](assets/jetpack.jpg)
 
 # Ultimate Android Jetpack Reference
@@ -41,12 +42,12 @@ Android Jetpack is the next generation of components and tools along with Archit
 * UI components
   - Animation & transitions
   - Auto
-  - Emoji
+  - [Emoji](#emoji)
   - Fragment
-  - Layout
+  - [Layout](#layout)
   - Palette
   - TV
-  - Wear OS by Google
+  - [Wear OS by Google](#wearosbygoogle)
   
 ## Architecture Components
 
@@ -423,6 +424,211 @@ Android Jetpack is the next generation of components and tools along with Archit
         - Opportunistic Execution is ensured. Consider you're sending an email this job is scheduled to JobScheduler or Firebase JobDispacher but the problem is we're not sure of how much time it would take to complete the task and we have no control over it and hence results in a bad user experience. To work arround this we'll have a <b>Thread Pool</b> and run the same thing there as well and we take care of replicating when the JobScheduler calls us back. This can be completely taken care by Work Manager now.
 
 ## Behaviour Components
+* <b>Notifications</b>
+    - A guildline for creating a unified notification system handling a wide variety of situations
+    - <b>Need</b>
+        - Notification Anatomy and the most common parts of
+            - `appName()`
+            - `setContentTitle()`
+            - `setContentText()`
+            - `setSmallIcon()` and `setLargeIcon()` which handle icon size
+            - `setWhen()` and `setShowWhen(False)` to show timestamps
+        - Notification Badges and Notification Actions which expand showing more information
+        - Lockscreen Notifications and Ordering using
+            - `setCategory()`
+            - `setPriority()`
+        - Notification Channels/Categories support which allows for grouping of notifications to specific scenarios
+   
+    - <b>Representation:</b>
+        - Notification Anatomy
+            <p align="center">
+                <img src="assets/notificationAnatomy.png">
+            </p>
+        - Notification Badges and Notification Actions
+            <p align="center">
+                <img src="assets/notificationBadge.png">
+            </p>
+        - Lockscreen Notifications and Ordering
+            <p align="center">
+                <img src="assets/lockscreenNotifications.png">
+            </p>
+        - Notification Channels/Categories
+            <p align="center">
+                <img src="assets/notificationChannels.png">
+            </p>
+    - <b>Code:</b>
+        - Notification Anatomy
+
+            - Requires the support library
+            ```kotlin
+            dependencies {
+                implementation "com.android.support:support-compat:28.0.0"
+            }
+            ```
+
+            - Setting Notification Content
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            ```
+            - Creating the content requires that you include a small or large icon to be drawn, the content title, the content text holding the information to be shown and the priority. This allows the system to show notifications by priority.
+
+            - Setting Notifications to be longer than the one line trucation
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Much longer text that cannot fit one line...")
+                .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            ```
+
+            - Add action buttons to the notification
+            ```kotlin
+            val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
+                action = ACTION_SNOOZE
+                putExtra(EXTRA_NOTIFICATION_ID, 0)
+            }
+            val snoozePendingIntent: PendingIntent = 
+                PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)
+            val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .addAction(R.drawable.ic_snooze, getString(R.string.snooze),
+                        snoozePendingIntent)
+            ```
+
+            - Setting notification's tap action
+            ```kotlin
+            // Create an explicit intent for an Activity in your app
+                val intent = Intent(this, AlertDetails::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+                val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("My notification")
+                    .setContentText("Hello World!")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    // Set the intent that will fire when the user taps the notification
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+            ```
+
+        - Notification Badges and Notification Actions
+
+            - Enabling badges
+            ```kotlin
+            val id = "my_channel_01"
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val mChannel = NotificationChannel(id, name, importance).apply {
+                description = descriptionText
+                setShowBadge(true)
+                //Setting this option to false disables notificication badges
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+            ```
+
+            - Setting custom notification counts
+            ```kotlin
+            var notification = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
+                .setContentTitle("New Messages")
+                .setContentText("You've received 3 new messages.")
+                .setSmallIcon(R.drawable.ic_notify_status)
+                .setNumber(messageCount)
+                //Change the message count here
+                .build()
+            ```
+
+            - Modifying a notifications long-press menu icon
+            ```kotlin
+            var notification = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
+                .setContentTitle("New Messages")
+                .setContentText("You've received 3 new messages.")
+                .setSmallIcon(R.drawable.ic_notify_status)
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                //You must include a small badge icon to show in constant
+                .build()
+            ```
+
+        - Lockscreen Notification and Ordering
+
+            - Setting visibility 
+            ```kotlin
+            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);
+            //visibility is handled where VISBILITY_SECRET is mentioned
+            notificationManager.createNotificationChannel(notificationChannel);
+            ```
+
+            - There is 3 types of visibility practices:
+                - `VISIBILITY_PUBLIC` shows the notification's full content.
+                - `VISIBILITY_SECRET` doesn't show any part of this notification on the lock screen.
+                - `VISIBILITY_PRIVATE` shows basic information, such as the notification's icon and the content title, but hides the notification's full content.
+            - Setting the categories
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("My notification")
+                .setContentText("Hello World!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                //setting the category here to handle different scenarios
+            ```
+            - Options include, but not limited to:
+                - `CATEGORY_ALARM`
+                - `CATEGORY_REMINDER`
+                - `CATEGORY_EVENT`
+                - `CATEGORY_CALL`
+
+            - Setting the priority
+            ```kotlin
+            var mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                //setting the priority is in the same area where you defined notification anatomy, so the same options are in effect
+            ```
+
+        - Notification Channels/Categories
+
+            - Channel Creation
+            ```kotlin
+            private fun createNotificationChannel() {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val name = getString(R.string.channel_name)
+                val descriptionText = getString(R.string.channel_description)
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                //importance is handled where IMPORTANCE_DEFAULT is mentioned
+                val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+                }
+            }
+            ```
+
+            - Setting importance level has 4 options:
+                - `IMPORTANCE_HIGH` for *Urgent* importance, makes a sound and appears as a heads-up notification
+                - `IMPORTANCE_DEFAULT` for *high* importance, makes a sound
+                - `IMPORTANCE_LOW` for *medium* importance which makes no sound
+                - `IMPORTANCE_MIN` for *low* importance which does not make a sound or appear in the status bar
 
 * <b>Permissions</b>
     - <b>Need</b>
@@ -522,6 +728,402 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
             - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
 
+## UI Components
+
+
+* <b>Emoji</b>
+    - EmojiCompat renders Emojis even if they don't exist in old font packages used in an older OS.
+    - <b>Need</b>
+        - Backwards compatibility of Emojis with older Android OS (API level 19 or higher)
+        - Prevents Emojis from being displayed as invalid by creating an Emoji span
+    - <b>Code</b>
+        - <b>In the App Manifest:</b> add the following meta-data tag 
+        ```xml
+            <meta-data
+               	android:name="fontProviderRequests"
+        	    android:value="Noto Color Emoji Compat"/>
+        ```
+        - <b>One-time setup</b>
+        <br/>Getting the Emoji package can be done in one of two ways:
+            - Download Emoji set at install time:
+            ```java
+                // create a request to download the latest fonts package
+                val fontRequest = FontRequst(
+                    "com.google.android.gms.fonts",
+                	"com.google.android.gms",
+                	"Noto Color Emoji Compat",
+	                R.array.com_google_android_gms_fonts_certs);
+
+                    // initialize EmojiCompat such that it sends the request
+                    val config = FontRequestEmojiCompatConfig(this, fontRequest);
+                    EmojiCompat.init(config);
+            ```
+
+            - Bundle Emoji set with the apk:
+            <br /> (Note that this increases apk size and requires app updates upon each Emoji update)
+            ```java
+                //  initialize EmojiCompat such that retrieves the fonts locally
+                val config = BundledEmojiCompatConfig(this);
+                EmpjiCompat.init(config);
+            ```
+
+        - <b>Usage:</b>
+            - <b>Display emojis by using widgets that extend from AppCompat widgets </b>
+            ```xml
+            <android.support.text.emoji.widget.EmojiAppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            ```
+        
+        - <b>Other features:</b>
+
+            - <b>How to check if EmojiCompat is finished initializing: </b>
+            <br /> Inintializing EmojiCompat may take some time so checking if it is complete may be necesasry before proceeding with displaying Emojis
+            ```java
+                val config = FontRequestEmojiCompatConfig(this, fontRequest)
+                    .registerInitCallBack(object : EmojiCompat.InitCallback() {
+                        // your code to execute when initializing is complete
+                    });
+            ```
+            - <b> How to indicate an Emoji span:</b>
+            <br /> (useful for debugging)
+            ```java
+                // colors all Emoji spans in the chosen color to distinguish them from Emojis rendered normally
+                val config = FontRequestedEmojiCompatConfig(...)
+                    .setEmojiSpanIndicatorEnabled(true)
+                    .setEmojiSpanIndicatorColor(Color.MAGENTA);
+            ```
+
+            - <b> How to Preprocess a character sequence instead of repatedly using a raw string: </b>
+            ```java
+                // processes the Emoji normally if in current font package, otherwise as Emoji Span
+                val processed : CharSequence =
+                    EmojiCompat.get()
+                        .process("neutral face \uD83D\uDE10");
+            ```
+
+            - <b> To add Emoji support to a textView Subclass, use the EmojiTextViewHelper </b>
+            ```java
+                Class MyCheckBox(context: Context) :
+                AppCompatCheckBox(context) { 
+                    private val helper: EmojiTextViewHelper = ...
+
+                    init {
+                        helper.updateTransformationMethod();
+                    }
+
+                    override fun setAllCaps(allCaps: Boolean) {
+                        super.setAllCaps(allCaps)
+                        helper.setAllCaps(allCaps);
+                    }
+                }
+
+            ```
+
+- <b>Layout</b>
+    - A layout defines the structure for a user interface in your app, such as in an activity. All elements in the layout are built using a hierarchy of View and ViewGroup objects. 
+    - <b>View</b>
+        - The UI consists of a hierarchy of objects called views — every element of the screen is a view. The View class represents the basic building block for all UI components, and the base class for classes that provide interactive UI components such as buttons, checkboxes, and text entry fields.
+    - <b>ViewGroup</b>
+        - Views can be grouped together inside a view group, which acts as a container of views. The relationship is parent-child, in which the parent is a view group, and the child is a view or view group within the group.
+  
+    - <b>Layout Attributes</b> <br>
+      - <b>ID</b><br>
+         - These ids are typically assigned in the layout XML files, and are used to find specific views within the view tree.View IDs need not be unique throughout the tree.<br>
+      - <b>Height & Width</b><br>
+         - It describes about the Height and Width of the view.<br><br>
+         - Before Moving into Margin and Padding See the below Image to understand the basic view of Margin and Padding.<br>
+         <p align="center">
+            <img src="assets/margin&padding.png">
+          </p><br>
+       - <b>Margin and Padding</b><br>
+          - Margins are the spaces outside the border, between the border and the other elements next to this view.
+          - Padding is the space inside the border, between the border and the actual view’s content.<br>
+       - <b>Gravity & Layout_Gravity</b><br>
+          - Gravity specifies how child Views are positioned.
+          - Layout_Gravity specifies how much of the extra space in the layout should be allocated to the View.<br>
+          
+     - <b>Types</b><br>
+       - <b>Linear Layout</b><br>
+       - <b>Relative Layout</b><br>
+       - <b>Frameout Layout</b><br>
+       - <b>Constraint Layout</b><br>
+              
+     - <b>Linear Layout</b><br> 
+       - A layout that arranges other views either horizontally in a single column or vertically in a single row.<br>
+              ```xml
+                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="horizontal">
+                 </LinearLayout>
+              ```
+       - Set android:orientation to specify whether child views are displayed in a row or column.
+           
+         <p align="center">
+            <img src="assets/ver.png">
+          </p><br>
+        
+     - <b>Relative Layout</b><br>
+       - In a relative layout every element arranges itself relative to other elements or a parent element.
+        <p align="center">
+            <img src="assets/relative.jpg">
+          </p><br>
+          
+     - <b>Frame Layout</b><br>
+       - Frame Layout is designed to block out an area on the screen to display a single item. Generally, FrameLayout should be used to hold a single child view, because it can be difficult to organize child views in a way that's scalable to different screen sizes without the children overlapping each other.       
+       - You can, however, add multiple children to a FrameLayout and control their position within the FrameLayout by assigning gravity to each child, using the android:layout_gravity attribute.
+       - Child views are drawn in a stack, with the most recently added child on top.
+        <p align="center">
+            <img src="assets/frame.jpeg">
+          </p><br>
+       
+     - <b>Constraint Layout</b><br>
+        - A ConstraintLayout is a ViewGroup which allows you to position and size widgets in a flexible way.<br>
+        - <b>Note</b><br> 
+          - ConstraintLayout is available as a support library that you can use on Android systems starting with API level 9 (Gingerbread).
+          - There are currently various types of constraints that you can use:
+            - Relative positioning
+            - Margins
+            - Centering positioning
+            - Circular positioning
+            - Visibility behavior
+            - Dimension constraints
+            - Chains
+            - Virtual Helpers objects
+            - Optimizer
+            <p align="center">
+               <img src="assets/constraint.gif">
+            </p>
+
+- <b>Wear OS</b>
+    - Now, follows Material Design Guidelines.
+    - A design language with a set of rules, guidelines, components and best practices for creating websites and applications.
+    - <b>Need:</b>
+        - Color palettes (Darker palettes allow for better battery life for OLEDs)
+        - Adopt vertical layouts
+        - Horizontal swipe (Reserved for activity dismissal)
+        - Make use of user interface components
+    - <b>Code:</b>
+        - Generating a palette instance:
+
+        ```java
+                    // Generate palette synchronously and return it
+        			public  Palette createPaletteSync(Bitmap bitmap)  {
+        			    Palette p =  Palette.from(bitmap).generate();  
+        			    return p; 
+        			   
+        			    // Generate palette asynchronously and use it on a different  
+        			    // thread using onGenerated()
+        			    public  void createPaletteAsync(Bitmap bitmap)  {
+        			        Palette.from(bitmap).generate(new  PaletteAsyncListener()  {
+        			        public  void onGenerated(Palette p)  {
+        			        // Use generated instance  }  });  
+        				} 
+        			   
+        			}
+        ```
+
+        - <b>Representation:</b>
+          - <b>Wear OS Palette List</b><br>
+            <p align="center">
+                <img src="assets/palettelist.png" height=500 width=400>
+            </p>
+
+          - <b>Corresponding Wear OS UI</b><br>
+            <p align="center">
+                <img src="assets/wearospaletteexample.png">
+            </p>
+        - <b>Vertical Layout</b>
+        ```xml
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        	// Retrieves the tools 
+        	xmlns:tools="http://schemas.android.com/tools"
+        	// Sets default height and width to depend on a parent
+        	android:layout_width="match_parent" 
+        	android:layout_height="match_parent"
+        	// Sets default orientation to vertical
+        	android:orientation="vertical">
+            // Sets text for app face
+        	<TextView  android:id="@+id/text"  
+        		android:layout_width="wrap_content"  
+        		android:layout_height="wrap_content"  
+        		android:text="@string/hello_square"  />  
+        	</LinearLayout>
+        ```
+
+        - <b>Horizontal Swipe for Dismissing Activities:</b>
+        ```java
+        public class SwipeDismissFragment extends Fragment {
+        		private final Callback mCallback =
+        			new Callback() {
+        				@Override
+        					public void onSwipeStart() {
+        					// optional
+        				}
+        				@Override
+        					public void onSwipeCancelled() {
+        					// optional
+        				}
+        				@Override
+        				public void onDismissed(SwipeDismissFrameLayout layout) {
+        					// Code here for custom behavior such as going up the
+        					// back stack and destroying the fragment but staying in the app.
+        				}
+              };
+        	@Override
+        	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        		SwipeDismissFrameLayout swipeLayout = new SwipeDismissFrameLayout(getActivity());
+        		// If the fragment should fill the screen (optional), then in the layout file,
+        		// in the android.support.wear.widget.SwipeDismissFrameLayout element,
+        		// set the android:layout_width and android:layout_height attributes
+        		// to "match_parent".
+        		View inflatedView = inflater.inflate(R.layout.swipe_dismiss_frame_layout, swipeLayout, false);
+        		swipeLayout.addView(inflatedView);
+        		swipeLayout.addCallback(mCallback);
+        		return swipeLayout;
+        		}
+        	}
+        ```
+
+    - <b>Representation:</b>
+        - <b>Do and Don't:</b><br>
+            <p align="center">
+                <img src="assets/1dlayout.png" height=480 width=300>
+                <img src="assets/2dlayoutdont.png" height=480 width=300>
+            </p>
+        - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
+
+
+    * <b>Watch Face Complications</b>
+        * Complications are features of a watch face that are displayed in addition to the time. The Complications API allows for seamless integration with API calls.
+        * <b>Need:</b>
+            * Exposing data to complications
+            * Adding complications to a watch face
+        * <b>Code:</b>
+            * Exposing data to complications
+             ```java
+              @Override
+              public void onComplicationUpdate(
+                int complicationId, int dataType, ComplicationManager complicationManager) {
+         
+                Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
+         
+                // Used to create a unique key to use with SharedPreferences for this complication.
+                ComponentName thisProvider = new ComponentName(this, getClass());
+         
+                // Retrieves your data, in this case, we grab an incrementing number from SharedPrefs.
+                SharedPreferences preferences =
+                  getSharedPreferences( ComplicationTapBroadcastReceiver.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
+         
+                int number =
+                        preferences.getInt(
+                                ComplicationTapBroadcastReceiver.getPreferenceKey(
+                                        thisProvider, complicationId),
+                                0);
+                String numberText = String.format(Locale.getDefault(), "%d!", number);
+         
+                ComplicationData complicationData = null;
+         
+                switch (dataType) {
+                    case ComplicationData.TYPE_SHORT_TEXT:
+                        complicationData =
+                            new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
+                                .setShortText(ComplicationText.plainText(numberText))
+                                .build();
+                    break;
+                default:
+                    if (Log.isLoggable(TAG, Log.WARN)) {
+                        Log.w(TAG, "Unexpected complication type " + dataType);
+                    }
+            }
+         
+            if (complicationData != null) {
+                complicationManager.updateComplicationData(complicationId, complicationData);
+         
+            } else {
+                // If no data is sent, we still need to inform the ComplicationManager, so
+                // the update job can finish and the wake lock isn't held any longer.
+                complicationManager.noUpdateRequired(complicationId);
+                }
+            }
+            ```
+      - <b>Discussion:</b><br>
+        To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
+
+    * <b>Adding complications to a watch face</b>
+      * Setting other data providers
+            ```java
+            startActivityForResult(
+                ComplicationHelperActivity.createProviderChooserHelperIntent(
+                getActivity(),
+                watchFace,
+                complicationId,
+                ComplicationData.TYPE_LARGE_IMAGE),
+            PROVIDER_CHOOSER_REQUEST_CODE);
+            ```
+        * <b>Representation:</b>     
+          - <b>Complications on a Watchface:</b><br>
+                <p align="center">
+                    <img src="assets/watchfacecomplication.png" height=500>
+              </p>
+      - <b>Discussion:</b><br>
+        Watch faces can call the createProviderChooserHelperIntent method to obtain an intent that can be used to show the chooser interface. When the user selects a data provider, the configuration is saved automatically; nothing more is required from the watch face.
+    
+    * <b>Receiving complication data</b>
+        ```java
+        private void initializeComplicationsAndBackground() {
+            ...
+            mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+            
+            // Creates a ComplicationDrawable for each location where the user can render a
+            // complication on the watch face. In this watch face, we create one for left, right,
+            // and background, but you could add many more.
+            ComplicationDrawable leftComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+            ComplicationDrawable rightComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+            
+            ComplicationDrawable backgroundComplicationDrawable =
+                new ComplicationDrawable(getApplicationContext());
+        
+                // Adds new complications to a SparseArray to simplify setting styles and ambient
+                // properties for all complications, i.e., iterate over them all.
+                mComplicationDrawableSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+            
+                mComplicationDrawableSparseArray.put(LEFT_COMPLICATION_ID,              leftComplicationDrawable);
+                mComplicationDrawableSparseArray.put(RIGHT_COMPLICATION_ID,             rightComplicationDrawable);
+                mComplicationDrawableSparseArray.put(
+                    BACKGROUND_COMPLICATION_ID, backgroundComplicationDrawable);
+            
+                // Recieves data from complication ids within the array
+                setComplicationsActiveAndAmbientColors(mWatchHandHighlightColor);
+                        setActiveComplications(COMPLICATION_IDS);
+                    }
+            ```
+     - <b>Discussion:</b><br> 
+          A watch face calls setActiveComplications(), in the WatchFaceService.Engine class, with a list of watch face complication IDs. A watch face creates these IDs to uniquely identify slots on the watch face where complications can appear. Complication data is delivered via the onComplicationDataUpdate() callback.
+    * <b>Stand Alone Functionality</b>
+        * The use of a Wear OS application to communicate with the cloud without the requirement of a corresponding bridge application on your Android smartphone. Wear OS also has the Google Play store in order to download applications straight to a Wear OS device
+        * <b>Need:</b>
+            * Standalone Identifier
+        * <b>Code:</b>
+          * Standalone Identifier
+            ```xml
+            <application>
+            ...
+            <meta-data
+                android:name="com.google.android.wearable.standalone"
+                // android value of true means the Wear OS application is standalone
+                // value is false if it is dependant on a phone application
+                android:value="true" />
+            ...
+            </application>
+            ```
+        - <b>Discussion:</b><br>
+          Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
+
 ### TODO
 
     - Complete the remaining components : work in Progress.!
@@ -545,14 +1147,3 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ### Contributions
 Just make pull request. You are in!
-        
-                
-        
-        
-    
-    
-    
-          
-        
-        
-
