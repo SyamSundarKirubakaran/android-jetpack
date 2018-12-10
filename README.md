@@ -18,12 +18,12 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ## Categories
 
-* [Architecture components](#architecture-components)
-  - [Room](#room)
+* [Architecture components](#Architecture-components)
+  - [Room](#Room)
   - [ViewModel](#ViewModel)
   - [LiveData](#LiveData)
   - [Lifecycles](#Lifecycles)
-  - [Data Binding](#data-binding)
+  - [Data Binding](#Data-Binding)
   - [Paging](#Paging)
   - [Navigation](#Navigation)
   - [WorkManager](#WorkManager)
@@ -42,12 +42,12 @@ Android Jetpack is the next generation of components and tools along with Archit
 * UI components
   - Animation & transitions
   - Auto
-  - [Emoji](#emoji)
+  - [Emoji](#Emoji)
   - Fragment
-  - [Layout](#layout)
+  - [Layout](#Layout)
   - Palette
   - TV
-  - [Wear OS by Google](#wearosbygoogle)
+  - [Wear OS by Google](#WearOSByGoogle)
   
 ## Architecture Components
 
