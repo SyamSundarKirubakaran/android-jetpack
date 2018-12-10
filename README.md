@@ -442,7 +442,7 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Representation:</b>
         - Notification Anatomy
             <p align="center">
-                <img src="assets/notificationAnatomy.png">
+                <img height=200 width=538 src="assets/notificationAnatomy.png">
             </p>
         - Notification Badges and Notification Actions
             <p align="center">
@@ -989,8 +989,8 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Representation:</b>
         - <b>Do and Don't:</b><br>
             <p align="center">
-                <img src="assets/1dlayout.png" height=480 width=300>
-                <img src="assets/2dlayoutdont.png" height=480 width=300>
+                <img src="assets/1dlayout.png" height=405 width=320>
+                <img src="assets/2dlayoutdont.png" height=405 width=320>
             </p>
         - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
 
