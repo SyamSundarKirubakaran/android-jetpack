@@ -18,12 +18,12 @@ Android Jetpack is the next generation of components and tools along with Archit
 
 ## Categories
 
-* [Architecture components](#architecture-components)
-  - [Room](#room)
+* [Architecture components](#Architecture-components)
+  - [Room](#Room)
   - [ViewModel](#ViewModel)
   - [LiveData](#LiveData)
   - [Lifecycles](#Lifecycles)
-  - [Data Binding](#data-binding)
+  - [Data Binding](#Data-Binding)
   - [Paging](#Paging)
   - [Navigation](#Navigation)
   - [WorkManager](#WorkManager)
@@ -37,17 +37,17 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Media & playback
   - [Notifications](#Notifications)
   - [Permissions](#Permissions)
-  - Sharing
+  - [Sharing](#Sharing)
   - Slices
 * UI components
   - Animation & transitions
   - Auto
-  - [Emoji](#emoji)
+  - [Emoji](#Emoji)
   - Fragment
-  - [Layout](#layout)
+  - [Layout](#Layout)
   - Palette
   - TV
-  - [Wear OS by Google](#wearosbygoogle)
+  - [Wear OS by Google](#WearOSByGoogle)
   
 ## Architecture Components
 
@@ -442,7 +442,7 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Representation:</b>
         - Notification Anatomy
             <p align="center">
-                <img src="assets/notificationAnatomy.png">
+                <img height=200 width=538 src="assets/notificationAnatomy.png">
             </p>
         - Notification Badges and Notification Actions
             <p align="center">
@@ -727,7 +727,112 @@ Android Jetpack is the next generation of components and tools along with Archit
                 <uses-feature android:name="android.hardware.camera" android:required="false" />
             ```
             - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
-
+* <b>Sharing</b>
+    - You can build an action_send in order to handle sharing but it is much easier to use the ShareCompat API.
+    - <b>Need</b>
+        - Sharing and recieveing in Text
+        - Sharing and recieving in HTML Text
+        - Sharing and recieveing Files &/or Images
+    - <b>Code</b>
+        - Sharing Text
+        ```java
+        Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+            .setType("text/plain")
+            //Be sure to set type here
+            .setText(shareText)
+            //And specify what we are sharing here
+            .getIntent();
+        if (shareIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(shareIntent);
+        }
+        ```
+        - Sharing HTML Text
+        ```java
+        Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+            .setType("text/html")
+            .setHtmlText(shareHtmlText) 
+            //Changes from setText to setHTMLText here for scenario
+            .setSubject("Definitely read this")
+            .addEmailTo(importantPersonEmailAddress)
+            //You also have options here for other actions to different api calls
+            //This example includes emailing
+            //This is also thrown away if there is no applicable application installed
+            .getIntent();
+        ```
+        - Recieving Text (Both HTML Text and Text)
+            - In order to handle sharing we also need to account for recieving an intent filter is required to handle shared activities.
+            ```java
+            <activity android:name=”.ShareActivity”>
+            //Baseline intent filter that handles shared activities
+                <intent-filter>
+                    <action android:name=”android.intent.action.SEND”/>
+                    <category android:name=”android.intent.category.DEFAULT”/>
+                    //Allows intents by earlier shares to be read
+                    <category android:name=”android.intent.category.BROWSABLE”/>
+                    //Allows websites to share into the application
+                    <data android:mimeType=”text/plain”/>
+                    //Specify the typing to handle here, like we did above
+                </intent-filter>
+            </activity>
+            ```
+            - You have to check whether the sender is using the ShareCompat API or their own action handler, we are assuming in this example that they are using the ShareCompat API.
+            ```java
+            ShareCompat.IntentReader intentReader =
+                ShareCompat.IntentReader.from(activity);
+                //Checks whether the sender is using the ShareCompat API
+            if (intentReader.isShareIntent()) {
+                //If so extract the information
+                String[] emailTo = intentReader.getEmailTo();
+                String subject = intentReader.getSubject();
+                String text = intentReader.getHtmlText();
+                // Compose an email
+            }
+            ```
+        - Sharing Files &/or Images
+            - You have to take into account accesibility and also permissions into this action, making it tricky.
+            ```java
+            File imageFile = ...;
+            Uri uriToImage = ...; // Convert the File to a Uri
+            Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setType("image/png")
+                .setStream(uriToImage)
+                .getIntent();
+            ```
+            - Given that the naive method here is to set image uri there, it is not wise to do so.  
+            - Reasons not to do so:
+                - Requires writing files to a world readable location  
+                (Requires WRITE_STORAGE PERMISSION for sender)  
+                (Requires READ_STORAGE PERMISSION for reciever)
+                - The above are dangerous runtime permissions on Android 6.0 and above
+            - Instead we use FileProvider to handle file access, code changed from the previous example.
+            ```java
+            File imageFile = ...;
+            Uri uriToImage = FileProvider.getUriForFile(
+                context, FILES_AUTHORITY, imageFile);
+            //Handles file access here
+            Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setStream(uriToImage)
+                .getIntent();
+            // Provide read access
+            shareIntent.setData(uriToImage);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //Handles permissions for the uri
+            ```
+        - Recieving Files &/or Images
+            - Recieving is different for text than it is for files and/or images as you have to resolve what type for the file sent at the time of recieving it.
+            ```java
+            Uri uri = ShareCompat.IntentReader.from(activity).getStream();
+            Bitmap bitmap = null;
+            try {
+            // Works with content://, file://, or android.resource:// URIs
+                InputStream inputStream =
+                getContentResolver().openInputStream(uri);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                } catch (FileNotFoundException e) {
+                // Inform the user that things have gone horribly wrong
+                }
+            ```
+            - Overall after the resolve the content, we have try and catch areas to route it to applications that can handle it.
 ## UI Components
 
 
@@ -989,8 +1094,8 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Representation:</b>
         - <b>Do and Don't:</b><br>
             <p align="center">
-                <img src="assets/1dlayout.png" height=480 width=300>
-                <img src="assets/2dlayoutdont.png" height=480 width=300>
+                <img src="assets/1dlayout.png" height=405 width=320>
+                <img src="assets/2dlayoutdont.png" height=405 width=320>
             </p>
         - Using both vertical and horizontal scrolling can make traversing apps confusing, Stick to vertical.
 
