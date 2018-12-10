@@ -37,7 +37,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - Media & playback
   - Notifications
   - [Permissions](#Permissions)
-  - Sharing
+  - [Sharing](#Sharing)
   - Slices
 * UI components
   - Animation & transitions
@@ -727,6 +727,69 @@ Android Jetpack is the next generation of components and tools along with Archit
                 <uses-feature android:name="android.hardware.camera" android:required="false" />
             ```
             - Unless the <b>android:required</b> attribute is specified to false, your app will be listed "only" to devices that have the hardware.
+* <b>Sharing</b>
+    - You can build an action_send in order to handle sharing but it is much easier to use the ShareCompat API.
+    - <b>Need</b>
+        - Sharing and recieveing in Text
+        - Sharing and recieving in HTML Text
+        - Sharing and recieveing files
+        - Sharing Images
+    - <b>Code</b>
+        - Sharing Text
+        ```java
+        Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+            .setType("text/plain")
+            //Be sure to set type here
+            .setText(shareText)
+            //And specify what we are sharing here
+            .getIntent();
+        if (shareIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(shareIntent);
+        }
+        ```
+        - Sharing HTML Text
+        ```java
+        Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+            .setType("text/html")
+            .setHtmlText(shareHtmlText) 
+            //Changes from setText to setHTMLText here for scenario
+            .setSubject("Definitely read this")
+            .addEmailTo(importantPersonEmailAddress)
+            //You also have options here for other actions to different api calls
+            //This example includes emailing
+            //This is also thrown away if there is no applicable application installed
+            .getIntent();
+        ```
+        - Recieving Text (Both HTML Text and Text)
+            - In order to handle sharing we also need to account for recieving an intent filter is required to handle shared activities.
+            ```java
+            <activity android:name=”.ShareActivity”>
+            //Baseline intent filter that handles shared activities
+                <intent-filter>
+                    <action android:name=”android.intent.action.SEND”/>
+                    <category android:name=”android.intent.category.DEFAULT”/>
+                    //Allows intents by earlier shares to be read
+                    <category android:name=”android.intent.category.BROWSABLE”/>
+                    //Allows websites to share into the application
+                    <data android:mimeType=”text/plain”/>
+                    //Specify the typing to handle here, like we did above
+                </intent-filter>
+            </activity>
+            ```
+            - You have to check whether the sender is using the ShareCompat API or their own action handler, we are assuming in this example that they are using the ShareCompat API.
+            ```java
+            ShareCompat.IntentReader intentReader =
+                ShareCompat.IntentReader.from(activity);
+                //Checks whether the sender is using the ShareCompat API
+            if (intentReader.isShareIntent()) {
+                //If so extract the information
+                String[] emailTo = intentReader.getEmailTo();
+                String subject = intentReader.getSubject();
+                String text = intentReader.getHtmlText();
+                // Compose an email
+            }
+            ```
+        -Sharing
 
 ## UI Components
 
