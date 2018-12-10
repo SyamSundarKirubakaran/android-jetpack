@@ -732,8 +732,7 @@ Android Jetpack is the next generation of components and tools along with Archit
     - <b>Need</b>
         - Sharing and recieveing in Text
         - Sharing and recieving in HTML Text
-        - Sharing and recieveing files
-        - Sharing Images
+        - Sharing and recieveing Files &/or Images
     - <b>Code</b>
         - Sharing Text
         ```java
@@ -789,8 +788,51 @@ Android Jetpack is the next generation of components and tools along with Archit
                 // Compose an email
             }
             ```
-        -Sharing
-
+        - Sharing Files &/or Images
+            - You have to take into account accesibility and also permissions into this action, making it tricky.
+            ```java
+            File imageFile = ...;
+            Uri uriToImage = ...; // Convert the File to a Uri
+            Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setType("image/png")
+                .setStream(uriToImage)
+                .getIntent();
+            ```
+            - Given that the naive method here is to set image uri there, it is not wise to do so.  
+            - Reasons not to do so:
+                - Requires writing files to a world readable location  
+                (Requires WRITE_STORAGE PERMISSION for sender)  
+                (Requires READ_STORAGE PERMISSION for reciever)
+                - The above are dangerous runtime permissions on Android 6.0 and above
+            - Instead we use FileProvider to handle file access, code changed from the previous example.
+            ```java
+            File imageFile = ...;
+            Uri uriToImage = FileProvider.getUriForFile(
+                context, FILES_AUTHORITY, imageFile);
+            //Handles file access here
+            Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
+                .setStream(uriToImage)
+                .getIntent();
+            // Provide read access
+            shareIntent.setData(uriToImage);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //Handles permissions for the uri
+            ```
+        - Recieving Files &/or Images
+            - Recieving is different for text than it is for files and/or images as you have to resolve what type for the file sent at the time of recieving it.
+            ```java
+            Uri uri = ShareCompat.IntentReader.from(activity).getStream();
+            Bitmap bitmap = null;
+            try {
+            // Works with content://, file://, or android.resource:// URIs
+                InputStream inputStream =
+                getContentResolver().openInputStream(uri);
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                } catch (FileNotFoundException e) {
+                // Inform the user that things have gone horribly wrong
+                }
+            ```
+            - Overall after the resolve the content, we have try and catch areas to route it to applications that can handle it.
 ## UI Components
 
 
