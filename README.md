@@ -1006,25 +1006,19 @@ Android Jetpack is the next generation of components and tools along with Archit
               @Override
               public void onComplicationUpdate(
                 int complicationId, int dataType, ComplicationManager complicationManager) {
-         
                 Log.d(TAG, "onComplicationUpdate() id: " + complicationId);
-         
                 // Used to create a unique key to use with SharedPreferences for this complication.
                 ComponentName thisProvider = new ComponentName(this, getClass());
-         
                 // Retrieves your data, in this case, we grab an incrementing number from SharedPrefs.
                 SharedPreferences preferences =
                   getSharedPreferences( ComplicationTapBroadcastReceiver.COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
-         
                 int number =
                         preferences.getInt(
                                 ComplicationTapBroadcastReceiver.getPreferenceKey(
                                         thisProvider, complicationId),
                                 0);
                 String numberText = String.format(Locale.getDefault(), "%d!", number);
-         
-                ComplicationData complicationData = null;
-         
+                ComplicationData complicationData = null; 
                 switch (dataType) {
                     case ComplicationData.TYPE_SHORT_TEXT:
                         complicationData =
@@ -1037,10 +1031,8 @@ Android Jetpack is the next generation of components and tools along with Archit
                         Log.w(TAG, "Unexpected complication type " + dataType);
                     }
             }
-         
             if (complicationData != null) {
                 complicationManager.updateComplicationData(complicationId, complicationData);
-         
             } else {
                 // If no data is sent, we still need to inform the ComplicationManager, so
                 // the update job can finish and the wake lock isn't held any longer.
@@ -1052,7 +1044,7 @@ Android Jetpack is the next generation of components and tools along with Archit
         To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
 
     * <b>Adding complications to a watch face</b>
-    * <b>Setting other data providers</b><br>
+      * <b>Setting other data providers</b><br>
         ```java
                 startActivityForResult(
                 ComplicationHelperActivity.createProviderChooserHelperIntent(
@@ -1074,28 +1066,22 @@ Android Jetpack is the next generation of components and tools along with Archit
         private void initializeComplicationsAndBackground() {
             ...
             mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
-            
             // Creates a ComplicationDrawable for each location where the user can render a
             // complication on the watch face. In this watch face, we create one for left, right,
             // and background, but you could add many more.
             ComplicationDrawable leftComplicationDrawable =
                 new ComplicationDrawable(getApplicationContext());
-        
             ComplicationDrawable rightComplicationDrawable =
                 new ComplicationDrawable(getApplicationContext());
-            
             ComplicationDrawable backgroundComplicationDrawable =
                 new ComplicationDrawable(getApplicationContext());
-        
                 // Adds new complications to a SparseArray to simplify setting styles and ambient
                 // properties for all complications, i.e., iterate over them all.
                 mComplicationDrawableSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
-            
                 mComplicationDrawableSparseArray.put(LEFT_COMPLICATION_ID,              leftComplicationDrawable);
                 mComplicationDrawableSparseArray.put(RIGHT_COMPLICATION_ID,             rightComplicationDrawable);
                 mComplicationDrawableSparseArray.put(
                     BACKGROUND_COMPLICATION_ID, backgroundComplicationDrawable);
-            
                 // Recieves data from complication ids within the array
                 setComplicationsActiveAndAmbientColors(mWatchHandHighlightColor);
                         setActiveComplications(COMPLICATION_IDS);
@@ -1122,6 +1108,61 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
         - <b>Discussion:</b><br>
           Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
+          
+- <b>Palette API</b>
+    - <b>Need:</b>
+        - Extract useful color information form image.<br>
+        - Classify and obtain the color sense of an image.<br>
+        - Playing with colors to make the UI render based on the Dominant color of the image.<br>
+        - Obtain color information for the images obtained even through network calls.<br>
+    - <b>Code</b>
+        - Add the Dependency:<br>
+            `implementation 'com.android.support:palette-v7:28.0.0'`<br>
+        - Crate a Palette Instance:<br>
+            ```kotlin
+                // Generate palette synchronously and return it
+                    fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
+                // Generate palette asynchronously and use it on a different
+                // thread using onGenerated()
+                    fun createPaletteAsync(bitmap: Bitmap) {
+                        Palette.from(bitmap).generate { palette ->
+                        // Use generated instance
+                        }
+                    }
+            ```
+        - Note:<br>
+            - Use synchronous palette generation if you want to create the palette on the same thread as the method being called else do it asynchronously.
+            - The input should be given in the form of `bitmap` so consider converting the image into a bitmap.
+    - <b>Possible Color Profiles:</b><br>
+            - Light Vibrant<br>
+            - Vibrant<br>
+            - Dark Vibrant<br>
+            - Light Muted<br>
+            - Muted<br>
+            - Dark Muted<br>
+        <p align="center">
+            <img src="assets/palette-library.png" height=500>
+        </p>
+    - <b>Example</b>
+        - Following code snippet gets the color information from the image obtained through Glide and sets the backgroud to the color profile of the image obtained through Palette API.
+        ```kotlin
+            Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    myZoomageView.setImageBitmap(resource)
+                    Palette.from(resource).generate { palette ->
+                        val vibrantSwatch = palette?.mutedSwatch
+                        with(findViewById<ImageView>(R.id.myZoomageView)) {
+                            setBackgroundColor(vibrantSwatch?.rgb ?:
+                            ContextCompat.getColor(context, R.color.colorPrimary))
+                        }
+                    }
+                }
+            })
+        ```
+
 
 ### TODO
 
