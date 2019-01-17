@@ -1052,16 +1052,16 @@ Android Jetpack is the next generation of components and tools along with Archit
         To respond to update requests from the system, your data provider app must implement the onComplicationUpdate() method of the `ComplicationProviderService` class.  This method will be called when the system wants data from your provider - this could be when a complication using your provider becomes active, or when a fixed amount of time has passed.
 
     * <b>Adding complications to a watch face</b>
-      * Setting other data providers<br>
-            ```java
+    * <b>Setting other data providers</b><br>
+        ```java
                 startActivityForResult(
                 ComplicationHelperActivity.createProviderChooserHelperIntent(
                 getActivity(),
                 watchFace,
                 complicationId,
                 ComplicationData.TYPE_LARGE_IMAGE),PROVIDER_CHOOSER_REQUEST_CODE);
-            ```
-        * <b>Representation:</b>     
+        ```
+      * <b>Representation:</b>     
           - <b>Complications on a Watchface:</b><br>
                 <p align="center">
                     <img src="assets/watchfacecomplication.png" height=500>
