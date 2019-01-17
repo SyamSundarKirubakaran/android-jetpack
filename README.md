@@ -921,14 +921,14 @@ Android Jetpack is the next generation of components and tools along with Archit
             - Use synchronous palette generation if you want to create the palette on the same thread as the method being called else do it asynchronously.
             - The input should be given in the form of `bitmap` so consider converting the image into a bitmap.
     - <b>Possible Color Profiles:</b><br>
-            - Light Vibrant
-            - Vibrant
-            - Dark Vibrant
-            - Light Muted
-            - Muted
-            - Dark Muted
+        - Light Vibrant
+        - Vibrant
+        - Dark Vibrant
+        - Light Muted
+        - Muted
+        - Dark Muted
         <p align="center">
-            <img src="assets/palette-library.png" height="300" width="300">
+            <img src="assets/palette-library.png">
         </p>
     - <b>Example</b>
         - Following code snippet gets the color information from the image obtained through Glide and sets the backgroud to the color profile of the image obtained through Palette API.
