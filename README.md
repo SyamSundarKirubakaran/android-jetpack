@@ -45,7 +45,7 @@ Android Jetpack is the next generation of components and tools along with Archit
   - [Emoji](#emoji)
   - Fragment
   - [Layout](#layout)
-  - Palette
+  - [Palette](#palette)
   - TV
   - [Wear OS by Google](#wearosbygoogle)
   
@@ -1054,13 +1054,12 @@ Android Jetpack is the next generation of components and tools along with Archit
     * <b>Adding complications to a watch face</b>
       * Setting other data providers
             ```java
-            startActivityForResult(
+                startActivityForResult(
                 ComplicationHelperActivity.createProviderChooserHelperIntent(
                 getActivity(),
                 watchFace,
                 complicationId,
-                ComplicationData.TYPE_LARGE_IMAGE),
-            PROVIDER_CHOOSER_REQUEST_CODE);
+                ComplicationData.TYPE_LARGE_IMAGE),PROVIDER_CHOOSER_REQUEST_CODE);
             ```
         * <b>Representation:</b>     
           - <b>Complications on a Watchface:</b><br>
