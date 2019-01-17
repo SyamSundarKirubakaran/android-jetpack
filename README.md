@@ -895,6 +895,60 @@ Android Jetpack is the next generation of components and tools along with Archit
             <p align="center">
                <img src="assets/constraint.gif">
             </p>
+            
+- <b>Palette API</b>
+    - <b>Need:</b>
+        - Extract useful color information form image.<br>
+        - Classify and obtain the color sense of an image.<br>
+        - Playing with colors to make the UI render based on the Dominant color of the image.<br>
+        - Obtain color information for the images obtained even through network calls.<br>
+    - <b>Code</b>
+        - Add the Dependency:<br>
+            `implementation 'com.android.support:palette-v7:28.0.0'`<br>
+        - Crate a Palette Instance:<br>
+            ```kotlin
+                // Generate palette synchronously and return it
+                    fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
+                // Generate palette asynchronously and use it on a different
+                // thread using onGenerated()
+                    fun createPaletteAsync(bitmap: Bitmap) {
+                        Palette.from(bitmap).generate { palette ->
+                        // Use generated instance
+                        }
+                    }
+            ```
+        - Note:<br>
+            - Use synchronous palette generation if you want to create the palette on the same thread as the method being called else do it asynchronously.
+            - The input should be given in the form of `bitmap` so consider converting the image into a bitmap.
+    - <b>Possible Color Profiles:</b><br>
+            - Light Vibrant
+            - Vibrant
+            - Dark Vibrant
+            - Light Muted
+            - Muted
+            - Dark Muted
+        <p align="center">
+            <img src="assets/palette-library.png" height="300" width="300">
+        </p>
+    - <b>Example</b>
+        - Following code snippet gets the color information from the image obtained through Glide and sets the backgroud to the color profile of the image obtained through Palette API.
+        ```kotlin
+            Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    myZoomageView.setImageBitmap(resource)
+                    Palette.from(resource).generate { palette ->
+                        val vibrantSwatch = palette?.mutedSwatch
+                        with(findViewById<ImageView>(R.id.myZoomageView)) {
+                            setBackgroundColor(vibrantSwatch?.rgb ?:
+                            ContextCompat.getColor(context, R.color.colorPrimary))
+                        }
+                    }
+                }
+            })
+        ```
 
 - <b>Wear OS</b>
     - Now, follows Material Design Guidelines.
@@ -1108,61 +1162,6 @@ Android Jetpack is the next generation of components and tools along with Archit
             ```
         - <b>Discussion:</b><br>
           Since a standalone app (that is, an independent or semi-independent app) can be installed by an iPhone user or a user of an Android phone that lacks the Play Store, the watch app should be usable without the phone app.
-          
-- <b>Palette API</b>
-    - <b>Need:</b>
-        - Extract useful color information form image.<br>
-        - Classify and obtain the color sense of an image.<br>
-        - Playing with colors to make the UI render based on the Dominant color of the image.<br>
-        - Obtain color information for the images obtained even through network calls.<br>
-    - <b>Code</b>
-        - Add the Dependency:<br>
-            `implementation 'com.android.support:palette-v7:28.0.0'`<br>
-        - Crate a Palette Instance:<br>
-            ```kotlin
-                // Generate palette synchronously and return it
-                    fun createPaletteSync(bitmap: Bitmap): Palette = Palette.from(bitmap).generate()
-                // Generate palette asynchronously and use it on a different
-                // thread using onGenerated()
-                    fun createPaletteAsync(bitmap: Bitmap) {
-                        Palette.from(bitmap).generate { palette ->
-                        // Use generated instance
-                        }
-                    }
-            ```
-        - Note:<br>
-            - Use synchronous palette generation if you want to create the palette on the same thread as the method being called else do it asynchronously.
-            - The input should be given in the form of `bitmap` so consider converting the image into a bitmap.
-    - <b>Possible Color Profiles:</b><br>
-            - Light Vibrant<br>
-            - Vibrant<br>
-            - Dark Vibrant<br>
-            - Light Muted<br>
-            - Muted<br>
-            - Dark Muted<br>
-        <p align="center">
-            <img src="assets/palette-library.png" height=500>
-        </p>
-    - <b>Example</b>
-        - Following code snippet gets the color information from the image obtained through Glide and sets the backgroud to the color profile of the image obtained through Palette API.
-        ```kotlin
-            Glide.with(this)
-            .asBitmap()
-            .load(imageUrl)
-            .into(object : SimpleTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    myZoomageView.setImageBitmap(resource)
-                    Palette.from(resource).generate { palette ->
-                        val vibrantSwatch = palette?.mutedSwatch
-                        with(findViewById<ImageView>(R.id.myZoomageView)) {
-                            setBackgroundColor(vibrantSwatch?.rgb ?:
-                            ContextCompat.getColor(context, R.color.colorPrimary))
-                        }
-                    }
-                }
-            })
-        ```
-
 
 ### TODO
 
